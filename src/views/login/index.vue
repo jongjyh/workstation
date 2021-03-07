@@ -19,8 +19,8 @@
                         ref="loginForm"
                         @keyup.enter.native="submitForm"
                 >
-                    <el-form-item prop="username">
-                        <el-input placeholder="请输入用户名" v-model="loginForm.username">
+                    <el-form-item prop="acount">
+                        <el-input placeholder="请输入用户名" v-model="loginForm.account">
                             <i class="el-input__icon el-icon-user" slot="suffix"></i
                             ></el-input>
                     </el-form-item>
@@ -74,7 +74,7 @@
 
 <script>
     import { mapActions } from "vuex";
-
+    import axios from 'axios';
     export default {
         name: "Login",
         data() {
@@ -96,13 +96,13 @@
                 curYear: 0,
                 lock: "lock",
                 loginForm: {
-                    username: "teacher",
+                    account: "admin",
                     password: "123456",
                     captcha: "",
                     captchaId: "",
                 },
                 rules: {
-                    username: [{ validator: checkUsername, trigger: "blur" }],
+                    account: [{ validator: checkUsername, trigger: "blur" }],
                     password: [{ validator: checkPassword, trigger: "blur" }],
                 },
                 logVerify: "",

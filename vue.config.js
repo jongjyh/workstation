@@ -24,9 +24,8 @@ module.exports = {
             // detail: https://cli.vuejs.org/config/#devserver-proxy
             '/api': { //需要代理的路径   例如 '/api'
                 target: `http://47.102.216.115:22222`, //代理到 目标路径
-                changeOrigin: true,
                 pathRewrite: { // 修改路径数据
-                    '^/api': '/' // 举例 '^/api:""' 把路径中的/api字符串删除
+                    '^/api': '' // 举例 '^/api:""' 把路径中的/api字符串删除
                 },
                 secure:false
             }

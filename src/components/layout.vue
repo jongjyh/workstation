@@ -22,7 +22,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon="el-icon-user" command="personInfoOpen">个人信息</el-dropdown-item>
 
-                        <el-dropdown-item icon="el-icon-close" >退出</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-close" command="logOut">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <span>{{this.name}}</span>
@@ -37,19 +37,26 @@
                     <el-button type="text">修改头像</el-button>
                 </div>
                 <el-form :model="form">
+
                     <el-form-item label="姓名" :label-width="formLabelWidth">
                         <el-input v-model="form.name" autocomplete="off"></el-input>
                     </el-form-item>
+                    <el-form-item label="学号" :label-width="formLabelWidth">
+                        <el-input v-model="form.id" autocomplete="off" :disabled="true" ></el-input>
+
+                    </el-form-item>
                     <el-form-item label="邮箱" :label-width="formLabelWidth">
                         <el-input v-model="form.mail" autocomplete="off" ></el-input>
+                        <el-button type="text">修改邮箱</el-button>
                     </el-form-item>
                     <el-form-item label="密码" :label-width="formLabelWidth" >
                         <el-input v-model="form.password" autocomplete="off" show-password></el-input>
+                        <el-button type="text">修改密码</el-button>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="personInfoVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="personInfoVisible = false">修 改</el-button>
+                    <el-button type="primary" @click="updatapersonInfo">修 改</el-button>
                 </div>
             </el-dialog>
             <el-main>
@@ -96,6 +103,7 @@
 <script>
     import sideMenus from '@/components/sideMenus'
     import store from '@/store'
+    import Cookies from 'js-cookie'
     export default {
         name: "layout",
         components: {sideMenus},
@@ -108,6 +116,7 @@
                     name: '王小虎',
                     mail:'522963890@qq.com',
                     password:'123456',
+                    id:'16721073'
                 },
                 formLabelWidth: '50px'
             }
@@ -116,12 +125,29 @@
             handleCommand(command) {
                 if(command=='personInfoOpen')
                     this.personInfoVisible=true
+                if(command=='logOut')
+                    this.logOut()
             },
             logOut(){
+                store.commit('user/setToken', null)
+                Cookies.set('Token','')
                 /*
                 删除token后重定向
                  */
-                console.log('log out')
+                this.$router.push({path:'/login'});
+            },
+            loadPersonInfo(){
+                let user=store.getters['user/userInfo']
+                this.name=user.nickName;
+                this.form.name=user.nickName
+                this.role=user.role
+                this.id=user.uuid
+                this.form.mail=user.mail
+                this.form.id=user.uuid
+            },
+            updatapersonInfo(){
+                this.input
+                this.personInfoVisible=false
             }
         },
         computed:{
@@ -130,7 +156,7 @@
             }
         },
         mounted() {
-
+            this.loadPersonInfo();
         }
     }
 </script>

@@ -6,3 +6,11 @@ export const login = (data) => {
         data: data
     })
 }
+
+export const getInfo = (data) => {
+    return service({
+        url: "/user/info",
+        method: 'get',
+        data: data
+    })
+}

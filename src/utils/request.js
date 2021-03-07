@@ -2,7 +2,7 @@ import axios from 'axios'; // 引入axios
 import { Message } from 'element-ui';
 import store from '@/store'
 import context from '@/main.js'
-
+import Cookies from 'js-cookie'
 const service = axios.create({
     baseURL: '/api',
     timeout: 99999
@@ -34,8 +34,7 @@ service.interceptors.request.use(
         if (!config.donNotShowLoading) {
             showLoading()
         }
-        console.log(store)
-        const token = store.getters['user/token']
+        const token = Cookies.get('Token')
        // const user = store.getters['user/userInfo']
         config.data = JSON.stringify(config.data);
         config.headers = {

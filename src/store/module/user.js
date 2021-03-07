@@ -1,6 +1,8 @@
 import { login } from '@/api/user'
+import { getInfo} from '@/api/user'
 import router from '@/router/index'
 import store from "../index";
+import Cookies from 'js-cookie'
 const roleMap = new Map([[1, 'student'], [2, 'teacher'], [3, 'admin']]);
 export const user = {
     namespaced: true,
@@ -43,7 +45,7 @@ export const user = {
         }
     },
     actions: {
-        async LoginIn({commit, dispatch, rootGetters}, loginInfo) {
+        async LoginIn({commit, dispatch, getters,rootGetters}, loginInfo) {
             const res = await login(loginInfo)
             if (res.code == 200) {
                 let user= {
@@ -51,18 +53,20 @@ export const user = {
                     role:roleMap.get(res.data.role),
                     nickName: res.data.name,
                     uuid:res.data.id
-                };
-                commit('setUserInfo',  user)
+                }
+                commit('setUserInfo', user)
                 commit('setToken', res.data.token)
-                let role = roleMap.get(res.data.role)
+                Cookies.set('Token', res.data.token)
+                console.log(getters['userInfo'])
+                let role = user.role
                 dispatch('route/generateRoutes', { role },{ root: true }).then(() => { // 生成可访问的路由表
+                    console.log(getters['userInfo'])
                     router.addRoutes(rootGetters['route/addRoutes']) // 动态添加可访问路由表
+                    console.log(rootGetters['route/addRoutes'])
                     router.push({path: '/'})
                     return true
                 })
             }
-            console.log(res)
-            console.log(loginInfo)
             //commit('setUserInfo', loginInfo.username)
             //commit('setToken', "e2183hyf7ue22")
             //if(loginInfo.username==='student')
@@ -84,7 +88,21 @@ export const user = {
        //            commit("LoginOut")
        //        }
        // }
-        async GetInfo(){
+        async GetInfo({commit}){
+            const res = await getInfo()
+            if (res.code == 200) {
+                let user= {
+                    email:res.data.email,
+                    role:roleMap.get(res.data.role),
+                    nickName: res.data.name,
+                    uuid:res.data.id
+                }
+                commit('setUserInfo', user)
+                commit('setToken', res.data.token)
+                return user
+            }
+            else
+                console.log(res)
             /*
             token存在，用户信息不存在时向后台拉取个人信息，待补充
              */
@@ -98,7 +116,7 @@ export const user = {
             return state.token
         },
         role(state){
-            return state.role;
+            return state.userInfo.role;
         }
 
     }
