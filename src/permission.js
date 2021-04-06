@@ -1,22 +1,19 @@
 import router from "./router";
 import store from "./store";
 import Cookies from 'js-cookie'
-const whiteList = ['/login', '/auth-redirect']
+const whiteList = ['/login', '/auth-redirect','/']
 
 function getToken() {
     return Cookies.get('Token')
 }
  router.beforeEach(async (to, from, next) => {
-     console.log(to.path)
-     console.log(to.path.indexOf("/gallery"))
+
      if(to.path.indexOf("/gallery") !== -1)
      {
-         console.log(3)
          next();
      }
     if (getToken()) { // 判断是否有token
         if (store.getters['user/role'].length === 0) { // 判断当前用户是否已拉取完user_info信息
-            console.log(11)
             const user=await store.dispatch('user/GetInfo')// 拉取info
             let role = user.role
             store.dispatch('route/generateRoutes', {role} ).then(() => { // 生成可访问的路由表
