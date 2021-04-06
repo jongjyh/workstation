@@ -63,7 +63,7 @@ export const user = {
                     console.log(getters['userInfo'])
                     router.addRoutes(rootGetters['route/addRoutes']) // 动态添加可访问路由表
                     console.log(rootGetters['route/addRoutes'])
-                    router.push({path: '/'})
+                    router.push({path: '/index'})
                     return true
                 })
             }

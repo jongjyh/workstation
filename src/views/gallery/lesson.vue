@@ -1,10 +1,17 @@
 <template>
     <el-container>
         <el-header class="header-style">
+            <div></div>
             <el-menu :default-active="activeIndex" class="el-menu-style" mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
                 <el-menu-item class="menu-item-style" index="1">作品集</el-menu-item>
                 <el-menu-item class="menu-item-style" index="2">关于本课程</el-menu-item>
             </el-menu>
+            <div>
+                <router-link to="/login" >
+                    <el-link :underline="false">转去登录</el-link>
+                </router-link>
+
+            </div>
         </el-header>
         <!--内容-->
         <el-main class="main-style">
@@ -48,7 +55,7 @@
                                     <span style="color: #999999; font-size: 13px; ">学号：</span>
                                     <span style=" font-size: 13px;">{{16721063}}</span></div>
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/detail/'+o.url">
+                                        <router-link :to="'/gallery/detail/'+o.url" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -211,7 +218,7 @@
         box-shadow: 0 0 4px #c7c7c7;
         background-color: #F6F6F6;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
     }
     .el-menu-style{
         background-color: #F6F6F6;

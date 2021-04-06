@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 
 export const constantRoutes = [
   {
-    path: '',
+    path: '/index',
     name: '主页',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -28,7 +28,7 @@ export const constantRoutes = [
   }
   /*展示网站*/
   ,{
-    path: '/gallery/index',
+    path: '/',
     name: '作品展示',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -110,7 +110,8 @@ export const constantRoutes = [
 ]
 
 const router = new VueRouter({
-  routes:constantRoutes
+  routes:constantRoutes,
+  mode:'history',
 })
 
 export default router

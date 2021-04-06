@@ -1,6 +1,7 @@
 <template>
     <el-container>
         <el-header class="header-style">
+            <div></div>
             <div class="el-menu-style">
             <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
             <el-menu-item class="menu-item-style" index="1">回忆录</el-menu-item>
@@ -9,6 +10,13 @@
                 <el-menu-item index="4">活动剪影</el-menu-item>
                 <el-menu-item index="5">关于我们</el-menu-item>
         </el-menu></div>
+            <div>
+                <router-link to="/login" >
+                    <el-link :underline="false">转去登录</el-link>
+                </router-link>
+
+            </div>
+
         </el-header>
         <!--内容-->
         <el-main class="main-style">
@@ -38,7 +46,7 @@
                                     <h3 style="text-align: center">{{o}}</h3>
 
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/lesson/'+o">
+                                        <router-link :to="'/gallery/lesson/'+o" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -229,11 +237,14 @@
     box-shadow: 0 0 4px #c7c7c7;
     background-color: #F6F6F6;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+
 }
     .el-menu-style{
         background-color: transparent;
 
+
+        position: relative;
     }
     .main-style{
         background-color: white;

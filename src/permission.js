@@ -8,8 +8,15 @@ function getToken() {
 }
  router.beforeEach(async (to, from, next) => {
      console.log(to.path)
+     console.log(to.path.indexOf("/gallery"))
+     if(to.path.indexOf("/gallery") !== -1)
+     {
+         console.log(3)
+         next();
+     }
     if (getToken()) { // 判断是否有token
         if (store.getters['user/role'].length === 0) { // 判断当前用户是否已拉取完user_info信息
+            console.log(11)
             const user=await store.dispatch('user/GetInfo')// 拉取info
             let role = user.role
             store.dispatch('route/generateRoutes', {role} ).then(() => { // 生成可访问的路由表
@@ -19,13 +26,14 @@ function getToken() {
         } else {
             if(to.path ==='/login')
             {
-                next('/');
+                next('/index');
             }
             next() //当有用户权限的时候，说明所有可访问路由已生成 如访问没权限的全面会自动进入404页面
         }
     }
     else {
-        if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+
+        if (whiteList.indexOf(to.path) !== -1 ) { // 在免登录白名单，直接进入
             next();
         } else {
             next('/login'); // 否则全部重定向到登录页
