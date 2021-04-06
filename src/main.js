@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './theme/index.css'
 import ElementUI from 'element-ui';
 
 // 导入markdown编辑器
@@ -16,6 +17,8 @@ Vue.use(VMdEditor);
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 
+import global_ from './Base.vue'
+Vue.prototype.GLOBAL = global_;
 
 import Bus from '@/utils/bus.js'
 Vue.use(Bus)

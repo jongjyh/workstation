@@ -112,6 +112,9 @@ export const user = {
         userInfo(state) {
             return state.userInfo
         },
+        id(state) {
+            return state.userInfo.uuid
+        },
         token(state) {
             return state.token
         },

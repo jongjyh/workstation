@@ -2,12 +2,12 @@
     <div class="container">
         <div class="course-title">
             <h1>课程名：{{name}}</h1>
-            <span style="">学期：{{this.term}}</span>
+            <span style="color: #515a6e">学期：{{this.term}}</span>
         </div>
 
         <el-row :gutter="70">
             <el-col :span="8"><div class="grid-content bg-white">
-                <el-card class="box-card">
+                <el-card class="box-card" shadow="never">
                     <div slot="header" class="clearfix">
                         <i class="el-icon-chat-round" style="padding-right: 5px"></i>
                         <span class="title-span">课程简介</span>
@@ -19,7 +19,7 @@
                 </el-card>
             </div></el-col>
             <el-col :span="8"><div class="grid-content bg-white">
-                <el-card class="box-card">
+                <el-card class="box-card" shadow="never">
                     <div slot="header" class="clearfix">
                         <i class="el-icon-reading" style="padding-right: 5px"></i>
                         <span class="title-span">课程通知</span>
@@ -31,7 +31,7 @@
                 </el-card>
             </div></el-col>
             <el-col :span="7"><div class="grid-content bg-white">
-                <el-card class="box-card">
+                <el-card class="box-card" shadow="never">
                     <div slot="header" class="clearfix">
                         <i class="el-icon-user-solid" style="padding-right: 5px"></i>
                         <span class="title-span">学生管理</span>
@@ -47,7 +47,7 @@
                 title="学生管理"
                 :visible.sync="studentsManageVisible"
                 width="60%"
-                :before-close="handleClose">
+                >
             <div class="student-wrapper">
                     <div slot="header" class="clearfix">
                         <el-button type="primary" style="float: right;" @click="addStudentFormVisible = true">导入学生</el-button>
@@ -70,8 +70,8 @@
                         </el-dialog>
                     </div>
                     <el-table
-                            :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-                            max-height="400"
+                            :data="students.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
+                            height="400"
                             style="width: 100%; ">
                         <el-table-column
                                 label="序号"
@@ -86,26 +86,18 @@
                                 prop="id">
                         </el-table-column>
                         <el-table-column
-                                label="班级"
-                                prop="class">
-                        </el-table-column>
-                        <el-table-column
-                                label="院系"
-                                prop="department">
-                        </el-table-column>
-                        <el-table-column
                                 align="right">
                             <template slot="header" slot-scope="scope">
                                 <el-input
                                         v-model="search"
                                         size="mini"
-                                        placeholder="输入关键字搜索"/>
+                                        placeholder="根据学号搜索"/>
                             </template>
                             <template slot-scope="scope">
                                 <el-button
                                         size="mini"
                                         type="danger"
-                                        @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -113,72 +105,82 @@
         </el-dialog>
 
         <div class="filter-wrapper">
-            <taskfilter></taskfilter>
+            <taskfilter :courseId=this.cid></taskfilter>
         </div>
     </div>
 </template>
 
 <script>
-    import {getCourse,addStudent} from '@/api/course'
+    import {getCourse,addStudent,studentList, delStudent} from '@/api/course'
     import taskfilter from "@/views/task/filter";
+    import {getCommit} from '@/api/submit'
     export default {
         name: "courseInfo",
         components: {taskfilter},
         data(){
             return{
                 studentsManageVisible:false,
-                studentCount:150,
-                students:[],
-                name:"走进软件",
-                introduction:"本课程对每个专题的讲座内容进行系统整理，形成了由讲座概要、专题内容、拓展阅读文献、教学课件和教学视频等组成的教学内容",
+                studentCount:0,
+                name:"",
+                introduction:"",
                 teacher:"",
-                term:"2020秋季学期",
-                cid:"",
+                term:"",
+                cid:Number,
+                courses:[],
                 notice:"",
                 loading: true,
-                tableData: [{
+                students: [{
                     name: '王小虎',
                     id:'16721073',
                     class:'172115',
                     department:'软件学院',
-                }, {
-                    name: '陈小虎',
-                    id:'17731032',
-                    class:'172115',
-                    department:'软件学院',
-                }, {
-                    name: '王珂',
-                    id:'17731032',
-                    class:'172115',
-                    department:'软件学院',
-                }, {
-                    name: '陈潇',
-                    id:'1672103',
-                    class:'172115',
-                    department:'软件学院',
-                },],
+                }],
                 search: '',
                 addStudentFormVisible:false,
                 form: {
                     data: ''
                 },
-                formLabelWidth: '150px'
+                formLabelWidth: '150px',
+                begin:'',
+                end:'',
             }
         },
         props:{
             courseId:String,
         },
         methods:{
+            async handleDelete(index,student){
+                const res= await delStudent({},this.cid,student.id)
+                if(res.code== 200){
+                    this.$message({
+                        message:'删除学生成功',
+                        type: 'success'
+                    });
+                    this.students.splice(index,1)
+                    this.studentCount=this.students.length
+                }
+                else
+                    console.log(res)
+            },
             async getCourseInfo(){
                 const res= await getCourse({},this.cid)
                 if(res.code== 200){
                     this.introduction=res.data.info
                     this.name=res.data.name
-                    const labelMap = new Map([[1, '春季学期'], [2, '夏季学期']]);
-                    this.term=res.data.year+labelMap.get(res.data.season)
+                    this.term=res.data.tname
+                    this.cid=res.data.cid
+                    this.begin=res.data.tbegin;
+                    this.end=res.data.tend;
                 }
                 else
                     console.log(res)
+                const res2 = await studentList({}, this.cid)
+                //获取总人数
+                if (res2.code == 200) {
+                    this.studentCount = res2.data.length
+                    this.students=res2.data
+                } else
+                    console.log(res2)
             },
             async submitAddStudentForm(){
                 let studentsID={
@@ -212,7 +214,8 @@
         margin-bottom: 15px;
     }
     .title-span{
-        font-weight: bolder
+        font-weight: bolder;
+        color: #515a6e;
     }
     .clearfix:before,
     .clearfix:after {
@@ -223,7 +226,11 @@
         clear: both
     }
     .container{
-        padding: 10px;
+        background-color: #FFFFFF;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+        border-radius: 4px;
+        padding: 16px;
+
     }
     .el-row {
         margin-bottom: 20px;

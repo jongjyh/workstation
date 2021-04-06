@@ -3,86 +3,132 @@
         <el-dialog title="编辑实验" :visible.sync="editTaskFormVisible"
                    width="35%"
                    center>
-            <el-form :model="form">
-                <el-form-item label="实验名称" :label-width="formLabelWidth">
-                    <el-input  placeholder="请输入实验名" v-model="form.name" autocomplete="off"></el-input>
+            <el-form :model="basicForm" :rules="rules" ref="basicForm">
+                <el-form-item label="实验名称" :label-width="formLabelWidth"  prop="taskName">
+                    <el-input  placeholder="请输入实验名" v-model="basicForm.taskName" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="老师名称" :label-width="formLabelWidth">
                     <el-input
                             placeholder="请输入内容"
-                            v-model="this.teacher"
+                            v-model="basicForm.teacher"
                             :disabled="true">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="开设学期" :label-width="formLabelWidth">
-                    <el-select v-model="form.term" placeholder="请选择开设学期">
-                        <el-option v-for="(item,index) in term" :label="item.label" :value="item" :key='index'></el-option>
-                    </el-select>
+                <el-form-item label="是否允许组队" :label-width="formLabelWidth"  >
+                    <el-radio-group v-model="basicForm.team">
+                        <el-radio :label=true>是</el-radio>
+                        <el-radio :label=false>否</el-radio>
+                    </el-radio-group>
                 </el-form-item>
-                <el-form-item label="所属课程" :label-width="formLabelWidth">
-                    <el-select v-model="form.lesson" placeholder="请选择所属课程">
-                        <el-option v-for="(item,index) in lesson" :label="item.label" :value="item" :key='index'></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="开始时间" :label-width="formLabelWidth">
+                <el-form-item label="开始时间" :label-width="formLabelWidth"  prop="startTime">
                     <el-date-picker
-                            v-model="form.startTime"
+                            v-model="basicForm.startTime"
                             type="datetime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             placeholder="选择开始时间">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="结束时间" :label-width="formLabelWidth">
+                <el-form-item label="结束时间" :label-width="formLabelWidth"  prop="dueTime">
                     <el-date-picker
-                            v-model="form.dueTime"
+                            v-model="basicForm.dueTime"
                             type="datetime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             placeholder="选择结束时间">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="提交截止时间" :label-width="formLabelWidth">
-                    <el-date-picker
-                            v-model="form.submitTime"
-                            type="datetime"
-                            placeholder="选择提交截止时间">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="实验说明" :label-width="formLabelWidth">
+                <el-form-item label="实验说明" :label-width="formLabelWidth" prop="taskDetail">
                     <el-input type="textarea"
                               :rows="9"
                               placeholder="请输入实验说明"
-                              v-model="form.intro" autocomplete="off"></el-input>
+                              v-model="basicForm.taskDetail" autocomplete="off"></el-input>
                 </el-form-item>
 
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="editTaskFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitEditTaskForm">保 存</el-button>
+                <el-button type="primary" @click="submitEditTaskForm('basicForm')">保 存</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="编辑项目基本信息" :visible.sync="editProjectFormVisible"
+        <el-dialog title="编辑项目基本信息" :visible.sync="editprojectFormVisible"
                    width="35%"
                    center>
-            <el-form :model="projectform">
-                <el-form-item label="实验名称" :label-width="formLabelWidth">
-                    <el-input  placeholder="请输入实验名" v-model="projectform.name" autocomplete="off"></el-input>
+            <el-form :model="projectForm">
+                <el-form-item label="项目名称" >
+                    <el-input  placeholder="请输入项目名" v-model="projectForm.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="项目类型" :label-width="formLabelWidth">
-                    <el-radio-group v-model="radio">
-                        <el-radio :label="3">静态网站</el-radio>
-                        <el-radio :label="6">小程序</el-radio>
-                        <el-radio :label="9">其他</el-radio>
+                <el-form-item label="项目类型" >
+                    <el-radio-group v-model="projectForm.type">
+                        <el-radio :label="1">静态网站</el-radio>
+                        <el-radio :label="2">应用程序</el-radio>
+                        <el-radio :label="3">其他</el-radio>
+
                     </el-radio-group>
+
                 </el-form-item>
-                <el-form-item label="项目简介" :label-width="formLabelWidth">
+                <el-form-item label="上传链接" >
+                    <el-input  placeholder="请输入上传链接" v-model="projectForm.url" autocomplete="off" v-if="projectForm.type!==3"></el-input>
+                    <el-input  placeholder="请输入项目链接" v-model="projectForm.url" autocomplete="off" v-else></el-input>
+                    <el-link type="primary" v-if="projectForm.type!==3" @click="uploadVisible=true">上传项目</el-link>
+                    <el-dialog
+                            accept=".zip"
+                            title="我的上传"
+                            :visible.sync="uploadVisible"
+                            width="30%"
+                            center
+                            append-to-body>
+                        <div class="center-style">
+
+
+                        <div class="center-style"><span >请上传你的Zip文件，并把获得的外链填入上传链接</span></div>
+                        <el-upload
+                                class="upload-demo"
+                                drag
+                                action=""
+                                :show-file-list=false
+                                :http-request="Upload"
+                                :file-list="fileList"
+                        >
+                            <i class="el-icon-upload"></i>
+                            <div class="center-style">将文件拖到此处，或<em>点击上传</em></div>
+                            <div class="center-style" slot="tip">只能上传单个压缩包文件，且不超过10Mb</div>
+
+                        </el-upload>
+                            <template>
+                                <el-table
+                                        :data="fileList"
+                                        stripe
+                                        style="width: 100%">
+                                    <el-table-column
+                                            prop="name"
+                                            label="文件名"
+                                            width="180">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="url"
+                                            label="外链"
+                                            width="180">
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </div>
+                        <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="uploadVisible = false">确 定</el-button>
+  </span>
+                    </el-dialog>
+                </el-form-item>
+                <el-form-item label="项目简介">
                     <el-input type="textarea"
                               :rows="9"
-                              placeholder="请输入实验说明,10~20字"
-                              v-model="projectform.intro" autocomplete="off"></el-input>
+                              placeholder="简单地介绍下你的项目吧，10~20字"
+                              v-model="projectForm.info" autocomplete="off"></el-input>
                 </el-form-item>
 
             </el-form>
+            <span style="color: #909399">提示：在你提交作业之前你的项目信息都将保存在本地，数据将在你登出之后清空，请注意保存。</span>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="editProjectFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitEditTaskForm">保 存</el-button>
+
+                <el-button @click="editprojectFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveProjectInfoForm(projectForm)">保 存</el-button>
             </div>
         </el-dialog>
         <el-row v-if="role == 0">
@@ -94,7 +140,9 @@
                     </div>
                 </el-row>
             </el-col>
-            <el-col :span="16"  ><div class="grid-content bg-purple-dark student-detail" ><el-button plain @click="editProjectFormVisible = true">编辑实验信息</el-button><el-button plain>下载学生作业</el-button></div></el-col>
+            <el-col :span="16"  ><div class="grid-content bg-purple-dark student-detail" >
+                <el-button plain @click="editTaskFormVisible = true">编辑实验信息</el-button>
+                <el-button plain @click="downloadAllstudent()">下载所有学生作业</el-button></div></el-col>
         </el-row>
         <el-row v-if="role == 1">
             <el-col :span="4" >
@@ -112,142 +160,581 @@
                 <div class=" bg-purple-dark student-submit-3">
                     <el-row style="margin-bottom: 15px" >
                         <el-col :span="6" class="time-table-style"><div>项目名称:</div></el-col>
-                        <el-col :span="18" class="time-table-time-style"><div>{{this.taskName}}</div></el-col>
+                        <el-col :span="18" class="time-table-time-style"><div>{{this.project.name}}</div></el-col>
                     </el-row >
                     <el-row  style="margin-bottom: 15px" type="flex" justify="center" align="middle">
                         <el-col :span="6" class="time-table-style"><div>项目简介</div></el-col>
-                        <el-col :span="18" class="time-table-time-style"><div>{{this.taskIntro}}</div></el-col>
+                        <el-col :span="18" class="time-table-time-style"><div>{{this.project.info}}</div></el-col>
                     </el-row>
                     <el-row style="margin-bottom: 15px" type="flex" justify="center" align="middle">
                         <el-col :span="6" class="time-table-style"><div>项目类型</div></el-col>
-                        <el-col :span="18" class="time-table-time-style"><div>{{this.taskType}}</div></el-col>
+                        <el-col :span="18" class="time-table-time-style"><div>{{this.typeIndex[this.project.type]}}</div></el-col>
                     </el-row>
+
                 </div>
             </el-col>
             <el-col :span="10"  ><div class=" bg-purple-dark student-detail" >
                 <el-button plain @click="gotoEditShow">编辑展示页面</el-button>
-                <el-button plain @click="editProjectFormVisible = true">编辑项目信息</el-button><el-button plain>提交我的作业</el-button></div></el-col>
+                <el-button plain @click="editprojectFormVisible = true">编辑项目信息</el-button>
+                <el-tooltip :disabled="this.inTeam||this.commitInfo.status" content="当您是一名队员或者已经提交作业时，该按钮不可用" placement="bottom" effect="light">
+                    <el-button plain @click="commitProject" :disabled="this.inTeam||this.commitInfo.status">提交我的作业</el-button>
+                </el-tooltip>
+
+            </div></el-col>
         </el-row>
         <el-row>
             <el-col :span="10"><div class="grid-content bg-purple-dark time-table">
-                <el-row  style="margin-bottom: 5px">
+                <el-row  style="margin-top: 15px">
                     <el-col :span="8" class="time-table-style"><div>开始时间:</div></el-col>
-                    <el-col :span="12" class="time-table-time-style"><div>{{this.startTime}}</div></el-col>
+                    <el-col :span="12" class="time-table-time-style"><div>{{this.basicForm.startTime}}</div></el-col>
                 </el-row >
-                <el-row  style="margin-bottom: 5px">
+                <el-row  style="margin-top: 15px">
                     <el-col :span="8" class="time-table-style"><div>结束时间:</div></el-col>
-                    <el-col :span="12" class="time-table-time-style"><div>{{this.dueTime}}</div></el-col>
+                    <el-col :span="12" class="time-table-time-style"><div>{{this.basicForm.dueTime}}</div></el-col>
                 </el-row>
-                <el-row  style="margin-bottom: 5px">
-                    <el-col :span="8" class="time-table-style"><div>提交截止时间:</div></el-col>
-                    <el-col :span="12" class="time-table-time-style"><div>{{this.submitTime}}</div></el-col>
-                </el-row>
-                <el-row  style="margin-bottom: 5px">
-                    <el-col :span="8" class="time-table-style"><div>互评截止时间:</div></el-col>
-                    <el-col :span="12" class="time-table-time-style"><div>{{this.judgeTime}}</div></el-col>
-                </el-row>
-                <el-row style="margin-bottom: 5px">
-                    <el-col :span="8" class="time-table-style"><div>申诉截止时间:</div></el-col>
-                    <el-col :span="12" class="time-table-time-style"><div>{{this.hearTime}}</div></el-col>
+                <el-row  style="margin-top: 15px">
+                    <el-col :span="8" class="time-table-style"><div>最后提交时间:</div></el-col>
+                    <el-col :span="12" class="time-table-time-style"><div>{{this.commitInfo.time}}</div></el-col>
                 </el-row>
             </div></el-col>
             <el-col :span="12" :offset="2"><div class="grid-content bg-purple-light task-info" >
-                <el-card class="box-card">
+                <el-card class="box-card" shadow="never">
                     <div slot="header" class="clearfix">
-                        <span style="font-weight: bolder;">基本信息</span>
+                        <i class="el-icon-info"></i>
+                        <span style="font-weight: bolder; margin-left: 10px" >基本信息</span>
                     </div>
                     <div >
                         <el-row  style="margin-bottom: 5px">
                             <el-col :span="8" class="info-table-style"><div>实验名称:</div></el-col>
-                            <el-col :span="12" class="time-table-time-style"><div>{{this.taskName}}</div></el-col>
+                            <el-col :span="12" class="time-table-time-style"><div>{{this.basicForm.taskName}}</div></el-col>
                         </el-row >
                         <el-row  style="margin-bottom: 5px">
                             <el-col :span="8" class="info-table-style"><div>所属课程:</div></el-col>
-                            <el-col :span="12" class="time-table-time-style"><div>{{this.taskLesson}}</div></el-col>
+                            <el-col :span="12" class="time-table-time-style"><div>{{this.basicForm.taskLesson}}</div></el-col>
                         </el-row>
                         <el-row  style="margin-bottom: 5px">
                             <el-col :span="8" class="info-table-style"><div>指导教师:</div></el-col>
-                            <el-col :span="12" class="time-table-time-style"><div>{{this.teacher}}</div></el-col>
+                            <el-col :span="12" class="time-table-time-style"><div>{{this.basicForm.teacher}}</div></el-col>
                         </el-row>
                     </div>
                 </el-card>
             </div></el-col>
         </el-row>
-        <el-row>
+        <!--学生管理-->
+        <el-row v-if="role=='0'">
             <el-col :span="24"><div class="grid-content bg-purple-light task-detail">
-                <el-card class="box-card">
+                <el-card class="box-card" shadow="never" >
                     <div slot="header" class="clearfix">
-                        <span style="font-weight: bolder;">实验说明</span>
-
+                        <span style="font-weight: bolder;">学生管理</span>
                     </div>
-                    <div >
-                        {{taskDetail}}
+                    <div>
+                        <template>
+                            <el-table
+                                    :data="students.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+                                    max-height="400"
+                                    style="width: 100%">
+                                <el-table-column
+                                        label="学号"
+                                        type="index"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                        <span>{{ scope.row.uid }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="姓名"
+                                        width="140">
+                                    <template slot-scope="scope">
+                                        <el-popover trigger="hover" placement="top">
+                                            <p>姓名: {{ scope.row.name }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                                            </div>
+                                        </el-popover>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="提交时间"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                        <div slot="reference" class="name-wrapper">
+                                            <i class="el-icon-time"></i>
+                                            <span style="margin-left: 10px" >{{ scope.row.time }}</span>
+                                            <span style="margin-left: 10px" v-if="scope.row.status==false">-</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="作品类型"
+                                        width="130">
+                                    <template slot-scope="scope">
+                                        <div slot="reference" class="name-wrapper">
+                                            <el-tag size="medium" :type="tagIndex[scope.row.type]" effect="dark" >{{typeIndex[scope.row.type]}}</el-tag>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="状态"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                            <div slot="reference" class="name-wrapper">
+                                                <el-tag size="medium" type="success" v-if="scope.row.status==true">已提交</el-tag>
+                                                <el-tag size="medium" type="danger" v-else-if="scope.row.status==false">未提交</el-tag>
+                                            </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                size="mini"
+                                                @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status" >下载</el-button>
+                                        <el-button
+                                                size="mini"
+                                                type="danger"
+                                                @click="Recommend(scope.$index, scope.row)" v-if="scope.row.rec==false" :disabled="!scope.row.status">推荐</el-button>
+                                        <el-button
+                                                size="mini"
+                                                type="danger"
+                                                @click="Recommend(scope.$index, scope.row)" v-if="scope.row.rec==true" :disabled="!scope.row.status">取消推荐</el-button>
+
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        align="right">
+                                    <template slot="header" slot-scope="scope">
+                                        <el-input
+                                                v-model="search"
+                                                size="mini"
+                                                placeholder="输入关键字搜索"/>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                    </div>
+                    <div class="pageination-style" >
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="currentPage"
+                                :page-sizes="[2, 10, 300, 400]"
+                                :page-size="pagesize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="count">
+                        </el-pagination>
                     </div>
                 </el-card>
             </div></el-col>
         </el-row>
+        <!--实验说明-->
         <el-row>
-            <el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
-            <el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
-        </el-row>
+            <el-col :span="24"><div class="grid-content bg-purple-light task-detail">
+                <el-card class="box-card" shadow="never">
+                    <div slot="header" class="clearfix">
+                        <i class="el-icon-s-order"></i>
+                        <span style="font-weight: bolder; margin-left: 10px">实验说明</span>
 
+                    </div>
+                    <div >
+                        {{basicForm.taskDetail}}
+                    </div>
+                </el-card>
+            </div></el-col>
+        </el-row>
+<!--队伍-->
+        <el-row>
+            <el-col :span="5">
+                <team-card  :eid="id"
+                            :uid="uid"
+                            :group="commitInfo.group"
+                            v-if="role===1"
+                            @change="handleTeamStatusChange"
+                />
+            </el-col>
+        </el-row>
     </div>
 </template>
 
 <script>
+    import {getTask,editTask} from '@/api/task'
+    import {submitCount,dwOne,dwAll,setRecommend} from '@/api/download'
+    import {upload,commit,getCommit} from '@/api/submit'
+    import TeamCard from "./components/teamCard";
+
     export default {
         name: "detail",
+        components: {TeamCard},
         data(){
+            var checkDate  = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请选择开始日期'));
+                }
+                else {
+                    if (this.basicForm.dueTime !== '') {
+                        this.$refs.basicForm.validateField('dueTime');
+                    }
+                    callback();
+                }
+            }
+            var checkDate2  = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请选择结束日期'));
+                }else if(!this.basicForm.startTime) {
+                    callback(new Error('请先选择开始日期'));
+                }
+                else if (this.compareDate(this.basicForm.startTime,this.basicForm.dueTime)) {
+                    callback(new Error('结束日期必须晚于开始日期'));
+                }
+                else if (this.compareDate2(this.basicForm.dueTime)) {
+                    callback(new Error('结束日期必须晚于当前时间'));
+                }else {
+                    callback();
+                }
+            }
             return{
-                role:'0',// 0是老师，1是学生
-                startTime:"2021/1/1 0:00",
-                dueTime:"2021/1/7 0:00",
-                submitTime:"2021/1/7 0:00",
-                judgeTime:"-",
-                hearTime:"-",
-                taskName:"树协作",
-                taskIntro:'一款基于深度学习架构的微信小程序开发平台',
-                taskType:'微信小程序',
-                taskLesson:'',
-                teacher:'',
-                taskDetail:'',
+                role:'1',// 0是老师，1是学生
+                id:0,
+                cid:0,
+                uid:0,
+                tagIndex:['danger','success','info','warning'],
+                typeIndex:['无','静态网站','应用程序','其他'],
+                basicForm:{
+                    startTime:"",
+                    dueTime:"",
+                    taskName:"",
+                    taskLesson:'',
+                    teacher:'',
+                    taskDetail:'',
+                    team:false,
+                },
+                rules:{
+                    taskName:[
+                        { required: true, message: '请输入实验名称', trigger: 'blur' },
+                    ],
+                    taskDetail:[
+                        { required: true, message: '请输入实验简介', trigger: 'blur' },
+                    ],
+                    startTime:[
+                        { required: true,trigger: 'blur' },
+                        { validator:checkDate, trigger: 'blur' },
+                    ],
+                    dueTime:[
+                        { required: true,trigger: 'blur' },
+                        { validator:checkDate2, trigger: 'blur' },
+
+                    ],
+                },
+                inTeam:false,
                 submitCount:0,
-                count:100,
+                count:0,
+                students:[],
+                search: '',
+                currentPage:1,
+                pagesize:10,
                 editTaskFormVisible:false,
-                editProjectFormVisible:false,
-                projectform:{
+                editprojectFormVisible:false,
+                projectForm:{
                   name:'',
-                  intro:'',
-                  type:'',
+                  info:'',
+                  type:0,
+                    url:'',
+                    readme:'',
                 },
-                radio: 3,
-                form: {
+                uploadVisible:false,
+                project:{
                     name:'',
-                    intro:'',
-                    term:'',
-                    startTime:'',
-                    dueTime:'',
-                    submitTime:'',
-                    studentid:1,
+                    info:'',
+                    type:0,
+                    url:'',
+                    readme:'',
                 },
-                lesson:[],
-                term:[],
+                fileList:[],
+                commitInfo:{
+                  status:false,
+                  rec:false,
+                  uid:"",
+                  groups:[],
+                  time:"",
+                    name: "",
+                    info: "",
+                    type: 0,
+                    url: "",
+                    readme: "",
+                },
+                radio: 1,//类型
+                lesson:[],//所属课程
+                formLabelWidth:"100",
                 src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
             }
         },
         props:[],
+        created(){
+            this.uid=this.$store.getters['user/id']
+            let role =  this.$store.getters['user/role']
+            if(role === 'teacher')
+                this.role= 0
+            else
+                this.role = 1
+            this.id=this.$route.params.id
+            this.load(this.id)
+        },
         methods:{
-            submitEditTaskForm(){
+            handleTeamStatusChange(status){
+              this.inTeam=status;
+            },
+            async Upload(param){
+                let params = new FormData()
+                params.append("file", param.file)
+                let filename=param.file.name
+                const res=await upload(params);
+                if(res.code==200)
+                {
+                    let data=res.data;
+                    console.log(param)
+                    let file={
+                        name:filename,
+                        url:data,
+                    }
+                    this.fileList.push(file)
+                    console.log(this.fileList)
+                }
+                else
+                {
+                    if(res.data.code==413)
+                    {
+                        this.$message.error("上传文件过大")
+                    }
+                    console.log(res)
+                }
+            },
+            async Recommend(index, item){
+                const res= await setRecommend({},this.id,item.id)
+                if(res.code == 200)
+                {
+                    if(this.students[index].rec==false) {
+                        this.$message({
+                            message: '推荐成功',
+                            type: 'success'
+                        });
+                        this.students[index].rec=true
+                    }
+                    else{
+                        this.$message({
+                            message: '取消推荐成功',
+                            type: 'success'
+                        });
+                        this.students[index].rec=false
+                    }
+                }
+                else
+                    console.log(res)
+            },
+            handleSizeChange(val) {
+                this.pagesize=val
+                console.log(`每页 ${this.pagesize} 条`);
+            },
+            handleCurrentChange(val) {
+                this.currentPage=val
+                console.log(`当前页: ${val}`);
+            },
+            async dwone(index,item){
+                const res = await dwOne({},this.id,item.uid)
+                if(res.status==200){
+                    let url = window.URL.createObjectURL(new Blob([res.data]));
+                    // 生成一个a标签
+                    let link = document.createElement("a");
+                    link.style.display = "none";
+                    link.href = url;
+                    // 生成时间戳
+                    let timestamp=new Date().getTime();
+                    link.download = timestamp + ".zip";
+                    document.body.appendChild(link);
+                    link.click();
+                }
+                else
+                    console.log(res)
+            },
+            async downloadAllstudent(){
+              const res = await dwAll({},this.id)
+                if(res.status==200){
+                    let url = window.URL.createObjectURL(new Blob([res.data]));
+                    // 生成一个a标签
+                    let link = document.createElement("a");
+                    link.style.display = "none";
+                    link.href = url;
+                    // 生成时间戳
+                    let timestamp=new Date().getTime();
+                    link.download = timestamp + ".zip";
+                    document.body.appendChild(link);
+                    link.click();
+                }
+                else
+                    console.log(res)
+            },
+            async load(id){
+                const res= await getTask({},id)
+
+                if(res.code== 200){
+                    let data=res.data;
+                    console.log(res.data)
+                    this.cid=data.cid
+                    this.basicForm.startTime=data.begin
+                    this.basicForm.taskName=data.name
+                    this.basicForm.teacher=data.teacher;
+                    this.basicForm.taskDetail=data.info
+                    this.basicForm.taskLesson=data.cname
+                    this.basicForm.dueTime=data.end
+                    this.basicForm.team=data.team
+                    this.resources=data.resources;
+                }
+                else
+                    console.log(res)
+                //老师初始化数据
+                if(this.role==0) {
+                    const res2 = await submitCount({}, id)
+                    if (res2.code == 200) {
+                        let data=[];
+                        data = res2.data
+                        console.log(res2.data)
+                        this.count = data.length
+                        this.students=res2.data
+                        this.students.forEach(item =>{
+                            if(item.status==true)
+                                ++this.submitCount;
+                        })
+                    } else
+                        console.log(res2)
+                }
+                //学生初始化项目
+                else{
+                    const res=await getCommit({},this.id);
+                    if(res.code==200)
+                    {
+                        this.commitInfo=res.data
+                        if(this.commitInfo.status==false)
+                        {
+                            console.log(this.commitInfo)
+                            this.loadProjectInfoFormFromLocal()
+                        }
+                        else{
+                            this.projectForm={...this.commitInfo}
+
+                        }
+                    }else
+                        console.log(res)
+
+                }
+            },
+            async submitEditTaskForm(formName){
+                let data={
+                    begin:this.basicForm.startTime,
+                    end:this.basicForm.dueTime,
+                    info:this.basicForm.taskDetail,
+                    name:this.basicForm.taskName,
+                    team:this.basicForm.team,
+                }
+                this.$refs[formName].validate(async (valid) => {
+                    if(valid){
+                        const res= await editTask(data,this.id)
+                        if(res.code == 200)
+                        {
+                            this.$message({
+                                message:'修改实验成功',
+                                type: 'success'
+                            });
+                        }
+                        else
+                            console.log(res)
+                        this.editTaskFormVisible= false
+                    }else{
+                        console.log('error submit!!');
+                        return false;
+                    }
+                })
 
             },
+            saveProjectInfoForm(form){
+                console.log(form)
+                let localStorage=window.localStorage
+                localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/name',form.name)
+                localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/info',form.info)
+                localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/type',form.type)
+             //   localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/readme',form.readme)
+                localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/url',form.url)
+                this.editprojectFormVisible=false
+                this.project={ ...form }
+                this.$message({
+                    message:'保存成功',
+                    type: 'success'
+                });
+            },
+            loadProjectInfoFormFromLocal(){
+                let localStorage=window.localStorage
+                this.projectForm.name=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/name')
+                this.projectForm.info=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/info')
+                this.projectForm.type=Number(localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/type'))
+                this.projectForm.readme=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/readme')
+                this.projectForm.url=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/url')
+                this.project={ ...this.projectForm }
+                console.log(this.project)
+            },
             gotoEditShow(){
-                this.$router.push('/show/editor/'+this.studentid)
+                if(this.project.readme==null)
+                this.$router.push(
+                {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid}})
+                else{
+                    this.$router.push(
+                        {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid,readme:this.project.readme}})
+                }
+            },
+
+            async commitProject(){
+                const res=await commit(this.project,this.id)
+
+                if(res.code==200)
+                {
+                    this.$message({
+                        message:'提交作业成功',
+                        type: 'success'
+                    });
+                    this.commitInfo.time=new Date()
+                    this.commitInfo.status=false
+                }else
+                    console.log(res)
+            },
+            compareDate(start,due)
+            {
+                start= start.replace("-","/");//替换字符，变成标准格式
+                start= new Date(Date.parse(start));
+                due= due.replace("-","/");//替换字符，变成标准格式
+                due= new Date(Date.parse(due));
+                if(start < due) {
+                    return false
+                }
+                return true
+            },
+            compareDate2(due){
+                let now= new Date();
+                due= due.replace("-","/");//替换字符，变成标准格式
+                due= new Date(Date.parse(due));
+                if(now < due) {
+                    return false
+                }
+                return true
             }
         }
     }
 </script>
 
 <style scoped>
+    .center-style{
+        text-align: center;
+    }
+    .pageination-style{
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
     .task-image{
         text-align: center;
     }
@@ -315,10 +802,11 @@
     .time-table{
         height: 150px;
         padding: 10px 20px;
+
     }
 
     .task-detail{
-        height: 200px;
+
     }
     .bg-purple {
         background: #d3dce6;

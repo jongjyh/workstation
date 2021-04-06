@@ -26,32 +26,64 @@ export const constantRoutes = [
       }
     ]
   }
+  /*展示网站*/
   ,{
-    path: '',
+    path: '/gallery/index',
     name: '作品展示',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: layout,
-    children:[
-      {
-        path:"show",
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-        meta: {
-          title: '作品展示', //菜单名称
-          roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-          icon: 'el-icon-s-home' //菜单左侧的icon图标
-        }
-      }
-    ]
+    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
+    meta: {
+      title: '作品展示', //菜单名称
+      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+      icon: 'el-icon-info' //菜单左侧的icon图标
+    }
+  }
+  ,{
+    path: '/gallery/lesson/:cname',
+    name: '作品展示',
+    hidden:true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/lesson.vue'),
+    meta: {
+      title: '作品展示', //菜单名称
+      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+      icon: 'el-icon-info' //菜单左侧的icon图标
+    }
+  }
+  ,{
+    path: '/gallery/detail/:url',
+    name: '作品展示',
+    hidden:true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/detail.vue'),
+    meta: {
+      title: '作品展示', //菜单名称
+      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+      icon: 'el-icon-info' //菜单左侧的icon图标
+    }
   }
   ,
+    /*登录*/
   {
     path: '/login',
     name: 'Login',
     component: login,
     hidden: true
   },
+    /*邀请和退出*/
+  {
+    path: '/join/:code',
+    name: 'join',
+    component:() => import('@/views/team/join.vue'),
+    hidden: true
+  },
+
   {
     path: '',
     name: 'About',
@@ -127,7 +159,7 @@ export const asyncRoutes = [
     }, //页面需要的权限
     children: [
       {
-        path: 'editor/:id',
+        path: 'editor',
         component:()=>import("@/views/show/editor.vue"),
         name: 'editor',
         hidden:true,

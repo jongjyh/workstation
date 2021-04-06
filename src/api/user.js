@@ -6,7 +6,27 @@ export const login = (data) => {
         data: data
     })
 }
-
+export const name = (data) => {
+    return service({
+        url: "/user/name",
+        method: 'post',
+        data: data
+    })
+}
+export const mail = (data) => {
+    return service({
+        url: "/user/email",
+        method: 'post',
+        data: data
+    })
+}
+export const pw = (data) => {
+    return service({
+        url: "/user/password",
+        method: 'post',
+        data: data
+    })
+}
 export const getInfo = (data) => {
     return service({
         url: "/user/info",

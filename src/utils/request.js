@@ -34,12 +34,17 @@ service.interceptors.request.use(
         if (!config.donNotShowLoading) {
             showLoading()
         }
+        if(config.url=='/file')
+        {
+            return config;
+        }
         const token = Cookies.get('Token')
        // const user = store.getters['user/userInfo']
         config.data = JSON.stringify(config.data);
         config.headers = {
             'Content-Type': 'application/json',
             'Authorization': token,
+
          //   'x-user-id': user.ID
         }
         return config;
@@ -65,7 +70,10 @@ service.interceptors.response.use(
         //}
         if (response.data.code == 200) {
             return response.data
-        } else {
+        }else if(response.status==200&&response.data.type=='application/zip'){
+            return response
+        }
+        else {
             Message({
                 showClose: true,
                 message: response.data.msg ,

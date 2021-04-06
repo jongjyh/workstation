@@ -16,6 +16,19 @@
                     </el-menu-item>
                 </router-link>
             </template>
+            <template v-else-if="!item.children">
+                <router-link :to="item.path" :key="index">
+                    <!--           index跟浏览器地址对应，这样菜单才能显示选中状态  -->
+                    <el-menu-item :index="item.path">
+                        <template slot="title">
+                            <!-- 设置icon -->
+                            <i v-if="item.meta.icon" :class="item.meta.icon"></i>
+                            <!-- 菜单名称 -->
+                            {{item.meta.title}}
+                        </template>
+                    </el-menu-item>
+                </router-link>
+            </template>
             <!-- 一级菜单的情况 end-->
             <!-- 多级菜单 -->
             <template v-else>
@@ -71,6 +84,7 @@
         },
         mounted() {
             this.menus = this.routes;
+            console.log(this.menus)
         }
 
     }
