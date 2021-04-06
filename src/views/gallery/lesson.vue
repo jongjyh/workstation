@@ -29,17 +29,6 @@
                     </el-menu>
                 </el-col>
             </el-row>
-            <el-row type="flex" justify="center">
-                <el-col :span="11">
-                    <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelectType">
-
-                        <el-menu-item index="1">全部类型</el-menu-item>
-                        <el-menu-item index="2">静态网站</el-menu-item>
-                        <el-menu-item index="3">应用小程序</el-menu-item>
-                        <el-menu-item index="4">其他</el-menu-item>
-                    </el-menu>
-                </el-col>
-            </el-row>
             </div>
             <!--卡片-->
             <el-row type="flex" justify="center">
@@ -122,7 +111,6 @@
                 lessonImageSrc:'http://show.beihangsoft.cn/imgs/banner.png',
                 lesson:[],
                 activeIndex:"0",
-                activeIndex2:"2",
                 cname:"",
                 term:[],
                 tot:0,
@@ -163,9 +151,6 @@
                 this.loadProject(key,1,this.pageSize)
                 //返回第一页
                 this.page=1
-            },
-            handleSelectType(key, keyPath){
-
             },
             handleSelect(){
 
