@@ -110,7 +110,7 @@
             };
         },
         created() {
-            this.toCloud='https://cloud.beihangsoft.cn/?service=http://'+window.location.host
+            this.toCloud='https://cloud.beihangsoft.cn/?service=http://'+window.location.host+'/login'
             if(this.$route.query.authorization){
                 this.logByCloudSoft(this.$route.query.authorization)
             }
