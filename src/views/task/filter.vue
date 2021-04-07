@@ -61,10 +61,12 @@
             <el-row :gutter="20">
                 <el-col :span="1" ><el-button type="primary" plain v-if="this.role == 'teacher'" @click="addTaskFormVisible = true">创建实验</el-button>
                 </el-col>
-                <el-col :span="5" :offset="15"><el-input
-                        placeholder="请输入内容"
+                <el-col :span="5" :offset="15">
+                    <el-input
+                        placeholder="请输入实验名称"
                         prefix-icon="el-icon-search"
-                        v-model="searchContent">
+                        v-model="searchContent"
+                        @change="searchTask">
                 </el-input>
                 </el-col>
                 <el-col :span="1" ><el-button icon="el-icon-search" circle></el-button>
@@ -75,7 +77,7 @@
             <el-row type="flex" justify="center">
                 <el-col >
                     <el-table
-                        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+                        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize).filter(data => !searchContent || data.name.toLowerCase().includes(searchContent.toLowerCase()))"
                         style="width: 100%"
                         border
                         :row-class-name="tableRowClassName">
@@ -164,6 +166,9 @@
             courseId:Number,
         },
         methods: {
+            searchTask(){
+
+            },
             open(index, tableData){
                 this.$router.push('/task/detail/'+tableData[index].id)
             },
@@ -249,7 +254,6 @@
                             console.log(res2)
                         }
                 }
-                //某个学生的实验列表
 
                 //某个课程页下的实验列表
                 else

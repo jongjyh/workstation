@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 export const constantRoutes = [
   /*展示网站*/
   {
-    path: '',
+    path: '/',
     name: '作品展示',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

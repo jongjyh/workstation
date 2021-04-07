@@ -8,13 +8,13 @@
             <el-row class="select-term-wrapper" type="flex" justify="space-between">
                 <el-col :span=7>
                     <span style=" color: rgba(107,114,128,1)" >请选择学期：</span>
-                    <el-select v-model="chooseterm" placeholder="请选择">
+                    <el-select v-model="chooseterm" placeholder="请选择" @change="changeTerm">
                         <el-option
                                 v-for="item in term"
-                                :key="item.value"
+                                :key="item.tid"
                                 :label="item.label"
-                                :value="item.value"
-                                @change="val => changeTerm(val)">
+                                :value="item.tid"
+                                >
                         </el-option>
                     </el-select>
                 </el-col>
@@ -92,6 +92,7 @@
                 chooseterm:'',
                 term:[],
                 lesson:[],
+                lessonName:[],
                 showCourses:[],
                 addCourseFormVisible:false,
                 form: {
@@ -149,7 +150,7 @@
             changeTerm(term){
                 this.showCourses=[];
                 this.lesson.forEach((course)=>{
-                    if(course.term==term)
+                    if(course.tid === term)
                         this.showCourses.push(course)
 
                 })
