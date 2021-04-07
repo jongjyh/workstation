@@ -27,7 +27,7 @@
             <div class="courses-wrapper" style="margin-top: 15px">
                 <el-row>
                 <el-col :span=5 v-for="(item, index) in showCourses" :key="item.id" :offset="(index)%4 > 0 ? 1 : 0">
-                    <el-card :body-style="{ padding: '10px' }">
+                    <el-card :body-style="{ padding: '10px' }" shadow="hover">
                         <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
                         <div style="padding: 10px 5px;">
                             <span >{{item.name}}</span>
