@@ -7,9 +7,22 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(VueRouter)
 
 export const constantRoutes = [
+  /*展示网站*/
+  {
+    path: '',
+    name: '作品展示',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
+    meta: {
+      title: '作品展示', //菜单名称
+      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+      icon: 'el-icon-info' //菜单左侧的icon图标
+    }
+  },
   {
     path: '/index',
-    name: '主页',
     hidden:true,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -17,6 +30,7 @@ export const constantRoutes = [
     component: layout,
     children:[
       {
+        name: '主页',
         path:"",
         redirect: '/task/filter',
         meta: {
@@ -30,7 +44,7 @@ export const constantRoutes = [
 
   ,{
     path: '/gallery/lesson/:cname',
-    name: '作品展示',
+    name: 'lesson',
     hidden:true,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -44,7 +58,7 @@ export const constantRoutes = [
   }
   ,{
     path: '/gallery/detail/:url',
-    name: '作品展示',
+    name: 'detail',
     hidden:true,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -204,19 +218,6 @@ export const asyncRoutes = [
         }
       }
     ]
-  } /*展示网站*/
-  ,{
-    path: '/',
-    name: '作品展示',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
-    meta: {
-      title: '作品展示', //菜单名称
-      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-      icon: 'el-icon-info' //菜单左侧的icon图标
-    }
   },
     //
   {

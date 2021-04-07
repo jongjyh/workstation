@@ -122,13 +122,6 @@
                                 width="120">
                             <template slot-scope="scope">
                                 <el-button
-                                        @click.native.prevent="deleteRow(scope.$index, tableData)"
-                                        type="text"
-                                        size="small"
-                                        v-if="role == 'teacher'">
-                                    移除
-                                </el-button>
-                                <el-button
                                         @click.native.prevent="open(scope.$index, tableData)"
                                         type="text"
                                         size="small"

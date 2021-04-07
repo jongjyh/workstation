@@ -1,7 +1,5 @@
-import { login } from '@/api/user'
-import { getInfo} from '@/api/user'
+import { login,loginByAuth,getInfo } from '@/api/user'
 import router from '@/router/index'
-import store from "../index";
 import Cookies from 'js-cookie'
 const roleMap = new Map([[1, 'student'], [2, 'teacher'], [3, 'admin']]);
 export const user = {
@@ -67,27 +65,31 @@ export const user = {
                     return true
                 })
             }
-            //commit('setUserInfo', loginInfo.username)
-            //commit('setToken', "e2183hyf7ue22")
-            //if(loginInfo.username==='student')
-            //    commit('setRole','student');
-            //else if (loginInfo.username==='teacher')
-            //    commit('setRole','teacher');
-            //else if (loginInfo.username==='admin')
-            //    commit('setRole','admin');
-            //第一次登录时生成路由
-            //let role = getters.role
-            //dispatch('route/generateRoutes', { role },{ root: true }).then(() => { // 生成可访问的路由表
-            //    router.addRoutes(rootGetters['route/addRoutes']) // 动态添加可访问路由表
-            //    router.push({path: '/'})
-            //})
         },
-       // async LoginOut({commit}) {
-       //        const res = await jsonInBlacklist()
-       //        if (res.code == 0) {
-       //            commit("LoginOut")
-       //        }
-       // }
+
+        async LoginByCloud({commit, dispatch, getters,rootGetters}, auth){
+            const res = await loginByAuth(auth)
+            if (res.code == 200) {
+                let user= {
+                    email:res.data.email,
+                    role:roleMap.get(res.data.role),
+                    nickName: res.data.name,
+                    uuid:res.data.id
+                }
+                commit('setUserInfo', user)
+                commit('setToken', res.data.token)
+                Cookies.set('Token', res.data.token)
+                console.log(getters['userInfo'])
+                let role = user.role
+                dispatch('route/generateRoutes', { role },{ root: true }).then(() => { // 生成可访问的路由表
+                    console.log(getters['userInfo'])
+                    router.addRoutes(rootGetters['route/addRoutes']) // 动态添加可访问路由表
+                    console.log(rootGetters['route/addRoutes'])
+                    router.push({path: '/index'})
+                    return true
+                })
+            }
+        },
         async GetInfo({commit}){
             const res = await getInfo()
             if (res.code == 200) {

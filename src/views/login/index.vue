@@ -60,7 +60,7 @@
                         >登 录</el-button
                         >
                     </el-form-item>
-                    <el-link :underline="false" icon="el-icon-cloudy" style="width: 100%" href="https://www.baidu.com" target="_blank">通过云平台登录</el-link>
+                    <el-link :underline="false" icon="el-icon-cloudy" style="width: 100%" :href="toCloud" >通过云平台登录</el-link>
                 </el-form>
 
             </div>
@@ -74,7 +74,6 @@
 
 <script>
     import { mapActions } from "vuex";
-    import axios from 'axios';
     export default {
         name: "Login",
         data() {
@@ -93,6 +92,7 @@
                 }
             };
             return {
+                toCloud:'',
                 curYear: 0,
                 lock: "lock",
                 loginForm: {
@@ -110,7 +110,10 @@
             };
         },
         created() {
-            //this.loginVefify();
+            this.toCloud='https://cloud.beihangsoft.cn/?service=http://'+window.location.host
+            if(this.$route.query.authorization){
+                this.logByCloudSoft(this.$route.query.authorization)
+            }
             this.curYear = new Date().getFullYear();
         },
         methods: {
@@ -137,6 +140,15 @@
                     }
                 });
             },
+            ...mapActions("user", ["LoginByCloud"]),
+            async logByCloudSoft(auth){
+                let data= {
+                    authorization:auth,
+                    url:'http://'+window.location.host
+                }
+                console.log(data)
+                return await this.LoginByCloud(data);
+            },
             changeLock() {
                 this.lock === "lock" ? (this.lock = "unlock") : (this.lock = "lock");
             },
@@ -147,6 +159,7 @@
                 });*/
             },
         },
+
     };
 </script>
 

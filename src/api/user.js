@@ -1,4 +1,11 @@
 import service from '@/utils/request'
+export const loginByAuth = (auth) => {
+    return service({
+        url: "/user/verify",
+        method: 'post',
+        data:auth
+    })
+}
 export const login = (data) => {
     return service({
         url: "/user/login",
