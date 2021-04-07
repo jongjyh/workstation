@@ -3,7 +3,8 @@
         <el-aside  class="aside-wrapper" width="250px" >
             <div class="aside-title" >
                 <div class="aside-title-icon">
-                    <el-avatar :size="90" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" ></el-avatar>
+                    <el-image :src="logoimg" style="width: 100px"/>
+<!--                    <el-avatar :size="90" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" ></el-avatar>-->
                 </div>
 
                 <h1 class="icon-title">优秀作品展示系统</h1>
@@ -104,7 +105,7 @@
         text-align: center;
     }
     .aside-wrapper{
-        background-color: rgb(238, 241, 246)
+        background-color: white
     }
     .el-aside {
         color: #333;
@@ -142,6 +143,7 @@
                 }
             };
             return{
+                logoimg:require('@/assets/layout-logo.png'),
                 innerVisible:false,
                 name:'',
                 role:'',

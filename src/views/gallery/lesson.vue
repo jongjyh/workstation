@@ -16,7 +16,10 @@
         <!--内容-->
         <el-main class="main-style">
             <div class="screen-style">
-                <img :src="lessonImageSrc">
+                <el-image
+                        style="width: 1200px; height: 600px"
+                        :src="lessonImageSrc"
+                        :fit="fit"></el-image>
             </div>
 
             <!--作品集-->
@@ -90,14 +93,16 @@
                     <el-row>
                         <el-col :span="12">
                             <div >
-                                <el-image :src="coursesrc" style="height: 480px;width: 470px"></el-image>
+                                <el-image
+                                        style="width: 470px; height: 380px"
+                                        :src="lessonImageSrc"
+                                        :fit="fit"></el-image>
                             </div>
                         </el-col>
                         <el-col :span="10" :offset="1">
                             <div class="middle-style"></div>
                             <h1>课程介绍</h1>
-                            <div class="intro-font-style intro-font" >一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯一个简单的自我介绍咯</div>
-                            <el-divider></el-divider>
+                            <div class="intro-font-style intro-font" >{{courseInfo}}</div><el-divider></el-divider>
                         </el-col>
                     </el-row>
                 </div></el-col>
@@ -114,8 +119,10 @@
         name: "lesson",
         data(){
             return{
-                coursesrc:'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                lessonImageSrc:'http://show.beihangsoft.cn/imgs/banner.png',
+                courseInfo:'\t走进软件是信息类各专业的入门性导论类核心通识课程，在培养学生对信息科学和软件工程' +
+                    '知识、能力和素质方面起到先导作用，激发学生对软件工程专业的兴趣，为其它专业课的学习奠' +
+                    '定基础。',
+                lessonImageSrc:require('@/assets/course_bg.png'),
                 lesson:[],
                 activeIndex:"0",
                 cname:"",
@@ -213,6 +220,7 @@
     .intro-font{
         color: #808080;
         margin-top: 15px;
+        height: 100%;
     }
     .header-style{
         box-shadow: 0 0 4px #c7c7c7;
@@ -276,11 +284,7 @@
         float: right;
     }
 
-    .image {
-        width: 100%;
-        display: block;
-        height: 200px;
-    }
+
     .lessonimage {
         width: 100%;
         display: block;

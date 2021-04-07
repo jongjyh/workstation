@@ -10,6 +10,7 @@ export const constantRoutes = [
   {
     path: '/index',
     name: '主页',
+    hidden:true,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -17,7 +18,7 @@ export const constantRoutes = [
     children:[
       {
         path:"",
-        component: () => import( '@/views/Home.vue'),
+        redirect: '/task/filter',
         meta: {
           title: '首页', //菜单名称
           roles: ['user', 'admin'], //当前菜单哪些角色可以看到
@@ -26,20 +27,7 @@ export const constantRoutes = [
       }
     ]
   }
-  /*展示网站*/
-  ,{
-    path: '/',
-    name: '作品展示',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
-    meta: {
-      title: '作品展示', //菜单名称
-      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-      icon: 'el-icon-info' //菜单左侧的icon图标
-    }
-  }
+
   ,{
     path: '/gallery/lesson/:cname',
     name: '作品展示',
@@ -83,23 +71,6 @@ export const constantRoutes = [
     component:() => import('@/views/team/join.vue'),
     hidden: true
   },
-
-  {
-    path: '',
-    name: 'About',
-    component: layout,
-    children:[
-      {
-        path:"about",
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-        meta: {
-          title: '关于我们', //菜单名称
-          roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-          icon: 'el-icon-info' //菜单左侧的icon图标
-        }
-      }
-    ]
-  },
   {
     path:'/404',
     name:'error404',
@@ -127,7 +98,7 @@ export const asyncRoutes = [
     meta: {
       title:'课程管理',
       role: ['teacher'],
-      icon: "el-icon-s-custom"
+      icon: "el-icon-setting"
     }, //页面需要的权限
     children: [{
         path: 'course',
@@ -175,7 +146,7 @@ export const asyncRoutes = [
       meta: {
           title:'实验管理',
           role: ['teacher','student'],
-          icon: "el-icon-s-custom"
+          icon: "el-icon-s-order"
       },
     children: [
       {
@@ -233,6 +204,19 @@ export const asyncRoutes = [
         }
       }
     ]
+  } /*展示网站*/
+  ,{
+    path: '/',
+    name: '作品展示',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
+    meta: {
+      title: '作品展示', //菜单名称
+      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+      icon: 'el-icon-info' //菜单左侧的icon图标
+    }
   },
     //
   {

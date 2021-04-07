@@ -232,6 +232,7 @@
     .intro-font{
         color: #808080;
         margin-top: 15px;
+
     }
 .header-style{
     box-shadow: 0 0 4px #c7c7c7;

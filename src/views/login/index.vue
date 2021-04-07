@@ -96,7 +96,7 @@
                 curYear: 0,
                 lock: "lock",
                 loginForm: {
-                    account: "admin",
+                    account: "jongjhy",
                     password: "123456",
                     captcha: "",
                     captchaId: "",
