@@ -1,6 +1,5 @@
 import axios from 'axios'; // 引入axios
 import { Message } from 'element-ui';
-import store from '@/store'
 import context from '@/main.js'
 import Cookies from 'js-cookie'
 const service = axios.create({
@@ -34,8 +33,9 @@ service.interceptors.request.use(
         if (!config.donNotShowLoading) {
             showLoading()
         }
-        if(config.url=='/file')
+        if(config.url=='/file'||config.url=='/img')
         {
+            console.log(1)
             return config;
         }
         const token = Cookies.get('Token')

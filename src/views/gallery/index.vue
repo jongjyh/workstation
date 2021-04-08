@@ -39,14 +39,14 @@
             <el-row type="flex" justify="center">
                 <el-col :span="17"><div class="content-style">
                     <el-row :gutter="24" >
-                        <el-col :span="8" v-for="(o, index) in lesson" :key="o" style="margin-bottom: 25px">
+                        <el-col :span="8" v-for="(o, index) in lesson" :key="o.name" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                 <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="lessonimage">
                                 <div style="padding: 14px;">
-                                    <h3 style="text-align: center">{{o}}</h3>
+                                    <h3 style="text-align: center">{{o.name}}</h3>
 
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/lesson/'+o" >
+                                        <router-link :to="'/gallery/lesson/'+o.id" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -193,9 +193,7 @@
               const res=await courseName();
               if(res.code==200)
               {
-                  let nameList=res.data;
-                  this.lesson=nameList
-
+                  this.lesson=res.data;
               }else
                   console.log(res)
 

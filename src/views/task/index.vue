@@ -1,5 +1,8 @@
 <template>
-    <taskfilter></taskfilter>
+    <div class="outter_wrapper">
+        <div class="title">实验信息</div>
+        <taskfilter></taskfilter>
+    </div>
 </template>
 
 <script>
@@ -11,5 +14,10 @@
 </script>
 
 <style scoped>
-
+    .title{
+        color: #515a6e;
+        font-weight:700;
+        font-size: 19px;
+        margin-bottom: 15px;
+    }
 </style>

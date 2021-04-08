@@ -51,7 +51,7 @@
             <el-form :model="form" label-width="80px" label-position="left" :rules="rules" :ref="form">
                 <el-form-item label="课程名称" prop="name">
                     <el-select v-model="form.name" placeholder="请选择课程名"  >
-                        <el-option v-for="(item,index) in lessonName" :label="item" :value="item" :key='index'></el-option>
+                        <el-option v-for="(item,index) in lessonName" :label="item.name" :value="item.id" :key='index'></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="老师名称" >
@@ -119,7 +119,7 @@
             async submitCreatCourseForm(formName){
                 console.log(this.form)
                 let data={
-                    name:this.form.name,
+                    name_id:this.form.name,
                     info:this.form.intro,
                     tid:this.form.term.tid
                 }

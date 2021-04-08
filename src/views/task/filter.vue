@@ -1,6 +1,4 @@
 <template>
-    <div class="outter_wrapper">
-        <div class="title">实验信息</div>
         <div class="inner_wrapper">
             <div class="inner_title">未完成实验</div>
             <el-dialog title="创建实验" :visible.sync="addTaskFormVisible"
@@ -151,7 +149,6 @@
                 </div></el-col>
             </el-row>
         </div>
-    </div>
 </template>
 
 <script>
@@ -392,12 +389,7 @@
     }
 </style>
 <style  scoped>
-    .title{
-        color: #515a6e;
-        font-weight:700;
-        font-size: 19px;
-        margin-bottom: 15px;
-    }
+
     .inner_title{
         color: #515a6e;
         font-weight:700;

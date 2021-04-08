@@ -132,6 +132,36 @@
                 <el-button type="primary" @click="saveProjectInfoForm(projectForm)">保 存</el-button>
             </div>
         </el-dialog>
+        <el-dialog
+                title="上传缩略图"
+                :visible.sync="uploadImgVisible"
+                width="30%"
+                center
+                >
+            <div class="center-style">
+
+
+                <div class="center-style"><span >请上传你的项目缩略图，请上传长宽比大约为740*400的图片</span></div>
+                <el-upload
+                        accept=".jpg"
+                        class="upload-demo"
+                        drag
+                        action=""
+                        :show-file-list=false
+                        :http-request="UploadImg"
+                        :file-list="imgfileList"
+                >
+                    <i class="el-icon-upload"></i>
+                    <div class="center-style">将图片拖到此处，或<em>点击上传</em></div>
+                    <div class="center-style" slot="tip">只能上传单个图片文件，且不超过10Mb</div>
+
+                </el-upload>
+                <span>你当前缩略图外链为：{{projectForm.thumb}}</span>
+            </div>
+            <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="uploadImgVisible = false">确 定</el-button>
+  </span>
+        </el-dialog>
         <el-row v-if="role == 0">
             <el-col :span="8" >
                 <el-row >
@@ -152,8 +182,11 @@
                             <span class="demonstration">缩略图</span>
                             <el-image :src="src" style="width: 100px;height: 70px;border-radius: 10px"></el-image>
                         </div>
-                        <div class="task-info-style">
+                        <div class="middle-style">
 
+                            <el-tooltip class="item" effect="dark" content="请上传大约长宽比为740*400的缩略图，缩略图将出现在作品展示页" placement="bottom">
+                                <el-button type="text" @click="uploadImgVisible=true">上传图片</el-button>
+                            </el-tooltip>
                         </div>
                     </div>
             </el-col>
@@ -364,7 +397,8 @@
     import {submitCount,dwOne,dwAll,setRecommend} from '@/api/download'
     import {upload,commit,getCommit} from '@/api/submit'
     import TeamCard from "./components/teamCard";
-
+    import {uploadImg} from "../../api/submit";
+    import global from '@/Base.vue'
     export default {
         name: "detail",
         components: {TeamCard},
@@ -437,22 +471,18 @@
                 pagesize:10,
                 editTaskFormVisible:false,
                 editprojectFormVisible:false,
+                uploadImgVisible:false,
                 projectForm:{
                   name:'',
                   info:'',
                   type:0,
                     url:'',
                     readme:'',
+                    thumb:'',
                 },
                 uploadVisible:false,
-                project:{
-                    name:'',
-                    info:'',
-                    type:0,
-                    url:'',
-                    readme:'',
-                },
                 fileList:[],
+                imgfileList:[],
                 commitInfo:{
                   status:false,
                   rec:false,
@@ -468,7 +498,7 @@
                 radio: 1,//类型
                 lesson:[],//所属课程
                 formLabelWidth:"100",
-                src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
+                src: ''
             }
         },
         props:[],
@@ -495,13 +525,38 @@
                 if(res.code==200)
                 {
                     let data=res.data;
-                    console.log(param)
                     let file={
                         name:filename,
                         url:data,
                     }
                     this.fileList.push(file)
-                    console.log(this.fileList)
+                }
+                else
+                {
+                    if(res.data.code==413)
+                    {
+                        this.$message.error("上传文件过大")
+                    }
+                    console.log(res)
+                }
+            },
+            async UploadImg(param){
+                let params = new FormData()
+                params.append("file", param.file)
+                let filename=param.file.name
+                const res=await uploadImg(params,740,400);
+                if(res.code==200)
+                {
+                    this.$message.success("上传图片成功")
+                    let data=res.data;
+                    let file={
+                        name:filename,
+                        url:data,
+                    }
+                    this.imgfileList.push(file)
+                    this.projectForm.thumb=data
+                    localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/thumb',this.projectForm.thumb)
+                    this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
                 }
                 else
                 {
@@ -666,10 +721,11 @@
                 localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/name',form.name)
                 localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/info',form.info)
                 localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/type',form.type)
+                localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/thumb',form.thumb)
+
              //   localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/readme',form.readme)
                 localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/url',form.url)
                 this.editprojectFormVisible=false
-                this.project={ ...form }
                 this.$message({
                     message:'保存成功',
                     type: 'success'
@@ -682,16 +738,16 @@
                 this.projectForm.type=Number(localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/type'))
                 this.projectForm.readme=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/readme')
                 this.projectForm.url=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/url')
-                this.project={ ...this.projectForm }
-                console.log(this.project)
+                this.projectForm.thumb=localStorage.getItem(this.uid+'/'+this.cid+'/'+this.id+'/thumb')
+                this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
             },
             gotoEditShow(){
-                if(this.project.readme==null)
+                if(this.projectForm.readme==null)
                 this.$router.push(
                 {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid}})
                 else{
                     this.$router.push(
-                        {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid,readme:this.project.readme}})
+                        {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid,readme:this.projectForm.readme}})
                 }
             },
             commitTimeLimited(){
@@ -701,8 +757,7 @@
                 return startTime>endTime
             },
             async commitProject(){
-                const res=await commit(this.project,this.id)
-
+                const res=await commit(this.projectForm,this.id)
                 if(res.code==200)
                 {
                     this.$message({
@@ -802,10 +857,11 @@
         border-radius: 0px;
     }
     .student-submit-2{
-        height: 150px;
-        display: flex;
-        justify-content: center;
-        align-items:center;/*侧轴上居中*/
+      height: 150px;
+    }
+    .middle-style{
+        margin: 0 auto;
+        text-align: center;
     }
     .student-submit-3{
         height: 150px;

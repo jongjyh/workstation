@@ -4,121 +4,103 @@
             <h1>课程名：{{name}}</h1>
             <span style="color: #515a6e">学期：{{this.term}}</span>
         </div>
+        <template>
+            <el-tabs v-model="activeName" type="card" >
+                <el-tab-pane label="学生管理" name="first" ><div class="filter-wrapper">
+                    <el-card class="box-card" shadow="never">
+                        <div slot="header" class="clearfix">
+                            <i class="el-icon-user-solid" style="padding-right: 5px"></i>
+                            <span class="title-span">学生管理</span>
 
-        <el-row :gutter="70">
-            <el-col :span="8"><div class="grid-content bg-white">
-                <el-card class="box-card" shadow="never">
-                    <div slot="header" class="clearfix">
-                        <i class="el-icon-chat-round" style="padding-right: 5px"></i>
-                        <span class="title-span">课程简介</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">修改</el-button>
-                    </div>
-                    <div  class="text item">
-                        {{this.introduction}}
-                    </div>
-                </el-card>
-            </div></el-col>
-            <el-col :span="8"><div class="grid-content bg-white">
-                <el-card class="box-card" shadow="never">
-                    <div slot="header" class="clearfix">
-                        <i class="el-icon-reading" style="padding-right: 5px"></i>
-                        <span class="title-span">课程通知</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">修改</el-button>
-                    </div>
-                    <div  class="text item">
-                        {{this.notice}}
-                    </div>
-                </el-card>
-            </div></el-col>
-            <el-col :span="7"><div class="grid-content bg-white">
-                <el-card class="box-card" shadow="never">
-                    <div slot="header" class="clearfix">
-                        <i class="el-icon-user-solid" style="padding-right: 5px"></i>
-                        <span class="title-span">学生管理</span>
-                        <el-button style="float: right; padding: 3px 0" type="text" @click="studentsManageVisible = true">管理</el-button>
-                    </div>
-                    <div  style="text-align: center; height: 100%;font-size: 60px" >
-                        {{this.studentCount}}<span style="font-size: 10px; ">人</span>
-                    </div>
-                </el-card>
-            </div></el-col>
-        </el-row>
-        <el-dialog
-                title="学生管理"
-                :visible.sync="studentsManageVisible"
-                width="60%"
-                >
-            <div class="student-wrapper">
-                    <div slot="header" class="clearfix">
-                        <el-button type="primary" style="float: right;" @click="addStudentFormVisible = true">导入学生</el-button>
-                        <el-dialog :title="'为课程 '+ this.name +' 批量导入学生'" :visible.sync="addStudentFormVisible"
-                                   width="40%"
-                                   center
-                                   append-to-body>
-                            <el-form :model="form">
-                                <el-form-item >
-                                    <el-input type="textarea"
-                                              :rows="9"
-                                              placeholder="请输入学生学号，并以换行符分隔"
-                                              v-model="form.data" autocomplete="off"></el-input>
-                                </el-form-item>
-                            </el-form>
-                            <div slot="footer" class="dialog-footer">
-                                <el-button @click="addStudentFormVisible = false">取 消</el-button>
-                                <el-button type="primary" @click="submitAddStudentForm">确 定</el-button>
-                            </div>
-                        </el-dialog>
-                    </div>
-                    <el-table
-                            :data="students.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
-                            height="400"
-                            style="width: 100%; ">
-                        <el-table-column
-                                label="序号"
-                                type="index">
-                        </el-table-column>
-                        <el-table-column
-                                label="姓名"
-                                prop="name">
-                        </el-table-column>
-                        <el-table-column
-                                label="学号"
-                                prop="id">
-                        </el-table-column>
-                        <el-table-column
-                                align="right">
-                            <template slot="header" slot-scope="scope">
-                                <el-input
-                                        v-model="search"
-                                        size="mini"
-                                        placeholder="根据学号搜索"/>
-                            </template>
-                            <template slot-scope="scope">
-                                <el-button
-                                        size="mini"
-                                        type="danger"
-                                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-            </div>
-        </el-dialog>
+                        </div>
+                        <div class="student-wrapper">
+                            <el-table
+                                    :data="students.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
+                                    max-height="400"
+                                    style="width: 100%; ">
+                                <el-table-column
+                                        label="序号"
+                                        type="index">
+                                </el-table-column>
+                                <el-table-column
+                                        label="姓名"
+                                        prop="name">
+                                </el-table-column>
+                                <el-table-column
 
-        <div class="filter-wrapper">
-            <taskfilter :courseId=this.cid></taskfilter>
-        </div>
+                                        label="学号"
+                                        prop="id">
+                                </el-table-column>
+                                <el-table-column
+                                        width="400"
+                                        align="right">
+                                    <template slot="header" slot-scope="scope">
+                                        <div>
+                                            <el-row>
+                                                <el-col :span="10">
+                                                    <el-input
+                                                            v-model="search"
+                                                            size="mini"
+                                                            placeholder="根据学号搜索"/>
+                                                </el-col >
+                                                <el-col :span="10">
+                                                    <el-button type="primary" style="margin-top: 10px" @click="addStudentFormVisible = true">导入学生</el-button>
+                                                </el-col>
+                                            </el-row>
+
+
+                                        </div>
+                                    </template>
+
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                size="mini"
+                                                type="danger"
+                                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                                    </template>
+                                </el-table-column>
+
+                            </el-table>
+                            <el-button type="primary" style="margin-top: 10px" @click="addStudentFormVisible = true">导入学生</el-button>
+                            <el-dialog :title="'为课程 '+ this.name +' 批量导入学生'" :visible.sync="addStudentFormVisible"
+                                       width="40%"
+                                       center
+                            >
+                                <el-form :model="form">
+                                    <el-form-item >
+                                        <el-input type="textarea"
+                                                  :rows="9"
+                                                  placeholder="请输入学生学号，并以换行符分隔"
+                                                  v-model="form.data" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="addStudentFormVisible = false">取 消</el-button>
+                                    <el-button type="primary" @click="submitAddStudentForm">确 定</el-button>
+                                </div>
+                            </el-dialog>
+                        </div>
+                    </el-card>
+                </div>
+                </el-tab-pane>
+                <el-tab-pane label="实验管理" name="second"><div class="filter-wrapper">
+                    <taskfilter :courseId=this.cid></taskfilter>
+                </div></el-tab-pane>
+            </el-tabs>
+        </template>
     </div>
 </template>
 
 <script>
     import {getCourse,addStudent,studentList, delStudent} from '@/api/course'
     import taskfilter from "@/views/task/filter";
-    import {getCommit} from '@/api/submit'
     export default {
         name: "courseInfo",
         components: {taskfilter},
         data(){
             return{
+
+                activeName:'first',
                 studentsManageVisible:false,
                 studentCount:0,
                 name:"",
@@ -232,6 +214,9 @@
         padding: 16px;
 
     }
+    .filter-wrapper{
+        padding: 20px;
+    }
     .el-row {
         margin-bottom: 20px;
         &:last-child {
@@ -241,17 +226,8 @@
     .el-col {
         border-radius: 4px;
     }
-    .bg-white {
-        background: #FFFFFF;;
-
-    }
-    .grid-content {
-    }
     .row-bg {
         padding: 10px 0;
         background-color: #f9fafc;
-    }
-    .box-card {
-        min-height: 200px;
     }
 </style>
