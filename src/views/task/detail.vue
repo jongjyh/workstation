@@ -65,12 +65,12 @@
                     </el-radio-group>
 
                 </el-form-item>
-                <el-form-item label="上传链接" >
-                    <el-input  placeholder="请输入上传链接" v-model="projectForm.url" autocomplete="off" v-if="projectForm.type!==3"></el-input>
-                    <el-input  placeholder="请输入项目链接" v-model="projectForm.url" autocomplete="off" v-else></el-input>
+                <el-form-item label="外链" >
+                    <el-input  placeholder="请输入上传链接（请填写上传按钮中得到的外链）" v-model="projectForm.url" autocomplete="off" v-if="projectForm.type!==3"></el-input>
+                    <el-input  placeholder="请输入项目链接（请填写URL链接）" v-model="projectForm.url" autocomplete="off" v-else></el-input>
                     <el-link type="primary" v-if="projectForm.type!==3" @click="uploadVisible=true">上传项目</el-link>
                     <el-dialog
-                            accept=".zip"
+
                             title="我的上传"
                             :visible.sync="uploadVisible"
                             width="30%"
@@ -81,6 +81,7 @@
 
                         <div class="center-style"><span >请上传你的Zip文件，并把获得的外链填入上传链接</span></div>
                         <el-upload
+                                accept=".zip"
                                 class="upload-demo"
                                 drag
                                 action=""
@@ -160,24 +161,27 @@
                 <div class=" bg-purple-dark student-submit-3">
                     <el-row style="margin-bottom: 15px" >
                         <el-col :span="6" class="time-table-style"><div>项目名称:</div></el-col>
-                        <el-col :span="18" class="time-table-time-style"><div>{{this.project.name}}</div></el-col>
+                        <el-col :span="18" class="time-table-time-style"><div>{{this.projectForm.name}}</div></el-col>
                     </el-row >
                     <el-row  style="margin-bottom: 15px" type="flex" justify="center" align="middle">
                         <el-col :span="6" class="time-table-style"><div>项目简介</div></el-col>
-                        <el-col :span="18" class="time-table-time-style"><div>{{this.project.info}}</div></el-col>
+                        <el-col :span="18" class="time-table-time-style"><div>{{this.projectForm.info}}</div></el-col>
                     </el-row>
                     <el-row style="margin-bottom: 15px" type="flex" justify="center" align="middle">
                         <el-col :span="6" class="time-table-style"><div>项目类型</div></el-col>
-                        <el-col :span="18" class="time-table-time-style"><div>{{this.typeIndex[this.project.type]}}</div></el-col>
+                        <el-col :span="18" class="time-table-time-style"><div>{{this.typeIndex[this.projectForm.type]}}</div></el-col>
                     </el-row>
 
                 </div>
             </el-col>
             <el-col :span="10"  ><div class=" bg-purple-dark student-detail" >
+
                 <el-button plain @click="gotoEditShow">编辑展示页面</el-button>
                 <el-button plain @click="editprojectFormVisible = true">编辑项目信息</el-button>
-                <el-tooltip :disabled="this.inTeam||this.commitInfo.status" content="当您是一名队员或者已经提交作业时，该按钮不可用" placement="bottom" effect="light">
-                    <el-button plain @click="commitProject" :disabled="this.inTeam||this.commitInfo.status">提交我的作业</el-button>
+                <el-tooltip  content="您只能提交一次！当您是一名队员或者已经超时，该按钮不可用" placement="bottom" effect="light">
+                    <div style="margin-left: 10px">
+                        <el-button plain @click="commitProject" :disabled="!this.leader||this.commitInfo.status||commitTimeLimited()">提交我的作业</el-button>
+                    </div>
                 </el-tooltip>
 
             </div></el-col>
@@ -230,13 +234,13 @@
                     <div>
                         <template>
                             <el-table
-                                    :data="students.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+                                    :data="students.slice((currentPage-1)*pagesize,currentPage*pagesize).filter(data => !search || data.uid.includes(search))"
                                     max-height="400"
                                     style="width: 100%">
                                 <el-table-column
                                         label="学号"
                                         type="index"
-                                        width="180">
+                                        width="130">
                                     <template slot-scope="scope">
                                         <span>{{ scope.row.uid }}</span>
                                     </template>
@@ -255,7 +259,7 @@
                                 </el-table-column>
                                 <el-table-column
                                         label="提交时间"
-                                        width="180">
+                                        width="200">
                                     <template slot-scope="scope">
                                         <div slot="reference" class="name-wrapper">
                                             <i class="el-icon-time"></i>
@@ -265,22 +269,23 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                        label="作品类型"
-                                        width="130">
-                                    <template slot-scope="scope">
-                                        <div slot="reference" class="name-wrapper">
-                                            <el-tag size="medium" :type="tagIndex[scope.row.type]" effect="dark" >{{typeIndex[scope.row.type]}}</el-tag>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
                                         label="状态"
-                                        width="180">
+                                        width="130">
                                     <template slot-scope="scope">
                                             <div slot="reference" class="name-wrapper">
                                                 <el-tag size="medium" type="success" v-if="scope.row.status==true">已提交</el-tag>
                                                 <el-tag size="medium" type="danger" v-else-if="scope.row.status==false">未提交</el-tag>
                                             </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column v-if="basicForm.team"
+                                        label="队长"
+                                        width="130">
+                                    <template slot-scope="scope">
+                                        <div slot="reference" class="name-wrapper">
+                                            <el-tag size="medium" type="danger" v-if="scope.row.groups.length===1">无队伍</el-tag>
+                                            <el-tag size="medium" type="success" v-else-if="scope.row.groups.length!==1">队伍中</el-tag>
+                                        </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="操作">
@@ -305,7 +310,7 @@
                                         <el-input
                                                 v-model="search"
                                                 size="mini"
-                                                placeholder="输入关键字搜索"/>
+                                                placeholder="请输入学号"/>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -345,8 +350,8 @@
             <el-col :span="5">
                 <team-card  :eid="id"
                             :uid="uid"
-                            :group="commitInfo.group"
-                            v-if="role===1"
+                            :group="commitInfo.groups"
+                            v-if="projectForm.team"
                             @change="handleTeamStatusChange"
                 />
             </el-col>
@@ -423,7 +428,7 @@
 
                     ],
                 },
-                inTeam:false,
+                leader:true,
                 submitCount:0,
                 count:0,
                 students:[],
@@ -479,7 +484,8 @@
         },
         methods:{
             handleTeamStatusChange(status){
-              this.inTeam=status;
+              this.leader=status;
+              console.log(this.leader)
             },
             async Upload(param){
                 let params = new FormData()
@@ -579,7 +585,7 @@
                     this.cid=data.cid
                     this.basicForm.startTime=data.begin
                     this.basicForm.taskName=data.name
-                    this.basicForm.teacher=data.teacher;
+                    this.basicForm.teacher=data.teacher_name;
                     this.basicForm.taskDetail=data.info
                     this.basicForm.taskLesson=data.cname
                     this.basicForm.dueTime=data.end
@@ -598,6 +604,7 @@
                         this.count = data.length
                         this.students=res2.data
                         this.students.forEach(item =>{
+                            item.name=item.groups.find( x => x.account===item.uid).name
                             if(item.status==true)
                                 ++this.submitCount;
                         })
@@ -609,6 +616,7 @@
                     const res=await getCommit({},this.id);
                     if(res.code==200)
                     {
+                        console.log(res.data)
                         this.commitInfo=res.data
                         if(this.commitInfo.status==false)
                         {
@@ -617,7 +625,7 @@
                         }
                         else{
                             this.projectForm={...this.commitInfo}
-
+                            console.log(this.projectForm.name)
                         }
                     }else
                         console.log(res)
@@ -686,7 +694,12 @@
                         {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid,readme:this.project.readme}})
                 }
             },
-
+            commitTimeLimited(){
+                let startTime= new Date();
+                let endTime=new Date(Date.parse(this.basicForm.dueTime));
+//进行比较
+                return startTime>endTime
+            },
             async commitProject(){
                 const res=await commit(this.project,this.id)
 
@@ -697,7 +710,7 @@
                         type: 'success'
                     });
                     this.commitInfo.time=new Date()
-                    this.commitInfo.status=false
+                    this.commitInfo.status=true
                 }else
                     console.log(res)
             },

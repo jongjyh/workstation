@@ -1,6 +1,6 @@
 
 <script>
-    const BASE_URL='http://localhost:8080/#'
+    const BASE_URL='http://'+window.location.host
     export default {
         BASE_URL
     }

@@ -106,12 +106,14 @@
                         <el-table-column
                                 prop="startTime"
                                 label="开始时间"
-                                width="180">
+                                width="180"
+                                sortable>
                         </el-table-column>
                         <el-table-column
                                 prop="dueTime"
                                 label="结束时间"
-                                width="180">
+                                width="180"
+                                sortable>
                         </el-table-column>
                         <el-table-column
                                 prop="operation"

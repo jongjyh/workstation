@@ -171,7 +171,6 @@
                 const res= await courses()
                 if(res.code== 200){
                     this.lesson=res.data
-                    console.log(this.lesson)
                     this.showCourses=this.lesson
                 }
                 else

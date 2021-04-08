@@ -45,7 +45,7 @@
             <div class="item-style">
                 <span>成员列表：</span>
                 <el-tag
-                        :key="tag"
+                        :key="tag.account"
                         effect="light"
                         v-for="tag in group"
                 >
@@ -63,7 +63,7 @@
                             title="确定离开队伍吗？"
                             @confirm="leaveTeam"
                     >
-                        <el-button  slot="reference" type="danger" v-if="inTeam==true" >离开队伍</el-button>
+                        <el-button  slot="reference" type="danger" v-if="inTeam==true" :disabled="leader">离开队伍</el-button>
                     </el-popconfirm>
                 </template>
                 <el-dialog
@@ -98,8 +98,6 @@
 
             },
             async leaveTeam(){
-                console.log(111)
-                console.log(111)
                 const res=await leave({},this.eid,this.gid)
                 if(res.code==200){
                     this.$message({
@@ -107,7 +105,8 @@
                         type: 'success'
                     });
                     this.inTeam=false
-                    this.$emit('change',this.inTeam)
+                    this.leader=true
+                    this.$emit('change',this.leader)
                 }
                 else
                 {
@@ -122,11 +121,12 @@
                     let data=res.data
                     this.gid=data.gid;
                     this.inTeam=data.inTeam
-                    this.$emit('change',this.inTeam)
+
                     if(this.uid ===this.gid)
                         this.leader=true
                     else
                         this.leader=false
+                    this.$emit('change',this.leader)
 
                 }
                 else
@@ -141,7 +141,7 @@
         props:{
           eid:String,
             uid:String,
-            group:[],
+            group:Array,
         },
         data(){
             return{
