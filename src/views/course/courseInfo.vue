@@ -7,22 +7,24 @@
         <template>
             <el-tabs v-model="activeName" type="card" >
                 <el-tab-pane label="学生管理" name="first" ><div class="filter-wrapper">
-                    <el-card class="box-card" shadow="never">
+                    <el-card  shadow="never">
                         <div slot="header" class="clearfix">
                             <i class="el-icon-user-solid" style="padding-right: 5px"></i>
                             <span class="title-span">学生管理</span>
-
+                            <el-button type="primary" style="float: right; " @click="addStudentFormVisible = true" size="mini" icon="el-icon-plus">导入学生</el-button>
                         </div>
-                        <div class="student-wrapper">
+                        <div>
                             <el-table
                                     :data="students.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))"
                                     max-height="400"
-                                    style="width: 100%; ">
+                                    >
                                 <el-table-column
+                                        width="150"
                                         label="序号"
                                         type="index">
                                 </el-table-column>
                                 <el-table-column
+                                        width="200"
                                         label="姓名"
                                         prop="name">
                                 </el-table-column>
@@ -31,24 +33,16 @@
                                         label="学号"
                                         prop="id">
                                 </el-table-column>
+
                                 <el-table-column
-                                        width="400"
+                                        width="300"
                                         align="right">
                                     <template slot="header" slot-scope="scope">
-                                        <div>
-                                            <el-row>
-                                                <el-col :span="10">
+                                        <div class="button-style">
                                                     <el-input
                                                             v-model="search"
                                                             size="mini"
                                                             placeholder="根据学号搜索"/>
-                                                </el-col >
-                                                <el-col :span="10">
-                                                    <el-button type="primary" style="margin-top: 10px" @click="addStudentFormVisible = true">导入学生</el-button>
-                                                </el-col>
-                                            </el-row>
-
-
                                         </div>
                                     </template>
 
@@ -61,7 +55,7 @@
                                 </el-table-column>
 
                             </el-table>
-                            <el-button type="primary" style="margin-top: 10px" @click="addStudentFormVisible = true">导入学生</el-button>
+
                             <el-dialog :title="'为课程 '+ this.name +' 批量导入学生'" :visible.sync="addStudentFormVisible"
                                        width="40%"
                                        center
@@ -192,6 +186,10 @@
 </script>
 
 <style>
+    .button-style{
+        display: flex;
+
+    }
     .course-title{
         margin-bottom: 15px;
     }
@@ -213,6 +211,9 @@
         border-radius: 4px;
         padding: 16px;
 
+    }
+    .el-card__body{
+        padding-top: 0px;
     }
     .filter-wrapper{
         padding: 20px;

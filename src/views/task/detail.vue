@@ -172,8 +172,8 @@
                 </el-row>
             </el-col>
             <el-col :span="16"  ><div class="grid-content bg-purple-dark student-detail" >
-                <el-button plain @click="editTaskFormVisible = true">编辑实验信息</el-button>
-                <el-button plain @click="downloadAllstudent()">下载所有学生作业</el-button></div></el-col>
+                <el-button plain @click="editTaskFormVisible = true" icon="el-icon-edit">编辑实验信息</el-button>
+                <el-button plain @click="downloadAllstudent()" icon="el-icon-download">下载所有学生作业</el-button></div></el-col>
         </el-row>
         <el-row v-if="role == 1">
             <el-col :span="4" >
@@ -185,7 +185,7 @@
                         <div class="middle-style">
 
                             <el-tooltip class="item" effect="dark" content="请上传大约长宽比为740*400的缩略图，缩略图将出现在作品展示页" placement="bottom">
-                                <el-button type="text" @click="uploadImgVisible=true">上传图片</el-button>
+                                <el-button type="text" @click="uploadImgVisible=true" icon="el-icon-upload2">上传图片</el-button>
                             </el-tooltip>
                         </div>
                     </div>
@@ -209,11 +209,11 @@
             </el-col>
             <el-col :span="10"  ><div class=" bg-purple-dark student-detail" >
 
-                <el-button plain @click="gotoEditShow">编辑展示页面</el-button>
-                <el-button plain @click="editprojectFormVisible = true">编辑项目信息</el-button>
+                <el-button plain @click="gotoEditShow" icon="el-icon-edit">编辑展示页面</el-button>
+                <el-button plain @click="editprojectFormVisible = true" icon="el-icon-edit-outline">编辑项目信息</el-button>
                 <el-tooltip  content="您只能提交一次！当您是一名队员或者已经超时，该按钮不可用" placement="bottom" effect="light">
                     <div style="margin-left: 10px">
-                        <el-button plain @click="commitProject" :disabled="!this.leader||this.commitInfo.status||commitTimeLimited()">提交我的作业</el-button>
+                        <el-button plain @click="commitProject" :disabled="!this.leader||this.commitInfo.status||commitTimeLimited()" icon="el-icon-check">提交我的作业</el-button>
                     </div>
                 </el-tooltip>
 
@@ -324,13 +324,16 @@
                                 <el-table-column label="操作">
                                     <template slot-scope="scope">
                                         <el-button
+                                                icon="el-icon-download"
                                                 size="mini"
                                                 @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status" >下载</el-button>
                                         <el-button
+                                                icon="el-icon-trophy"
                                                 size="mini"
-                                                type="danger"
+                                                type="success"
                                                 @click="Recommend(scope.$index, scope.row)" v-if="scope.row.rec==false" :disabled="!scope.row.status">推荐</el-button>
                                         <el-button
+                                                icon="el-icon-close"
                                                 size="mini"
                                                 type="danger"
                                                 @click="Recommend(scope.$index, scope.row)" v-if="scope.row.rec==true" :disabled="!scope.row.status">取消推荐</el-button>
@@ -568,7 +571,7 @@
                 }
             },
             async Recommend(index, item){
-                const res= await setRecommend({},this.id,item.id)
+                const res= await setRecommend({},this.id,item.uid)
                 if(res.code == 200)
                 {
                     if(this.students[index].rec==false) {
@@ -671,7 +674,6 @@
                     const res=await getCommit({},this.id);
                     if(res.code==200)
                     {
-                        console.log(res.data)
                         this.commitInfo=res.data
                         if(this.commitInfo.status==false)
                         {
@@ -680,7 +682,8 @@
                         }
                         else{
                             this.projectForm={...this.commitInfo}
-                            console.log(this.projectForm.name)
+                            this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
+                            console.log(this.projectForm)
                         }
                     }else
                         console.log(res)

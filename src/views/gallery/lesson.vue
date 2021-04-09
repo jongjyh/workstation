@@ -18,8 +18,8 @@
             <div class="screen-style">
                 <el-image
                         style="width: 1200px; height: 600px"
-                        :src="lessonImageSrc"
-                        :fit="fit"></el-image>
+                        :src="ImageSrc"
+                        ></el-image>
             </div>
 
             <!--作品集-->
@@ -44,21 +44,21 @@
             <el-row type="flex" justify="center">
                 <el-col :span="20"><div class="content-style">
                     <el-row :gutter="24" >
-                        <el-col :span="6" v-for="(o, index) in lesson" :key="index" style="margin-bottom: 25px">
+                        <el-col :span="6" v-for="(o, index) in project" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                 <router-link :to="'/gallery/detail/'+o.url">
-                                    <img :src="o.src" class="lessonimage">
+                                    <img :src="o.src" class="projectimage">
                                 </router-link>
 
                                 <div style="padding: 10px;">
                                     <div style="text-align: center;font-weight: bolder;margin-top: 10px;margin-bottom: 5px" >{{o.title}}</div>
                                     <span style="color: #999999; font-size: 13px">作者：</span>
-                                    <span style=" font-size: 13px ">陈小云{{o.uname}}</span>
+                                    <span style=" font-size: 13px ">{{o.uname}}</span>
                                     <div>
                                     <span style="color: #999999; font-size: 13px; ">学号：</span>
                                     <span style=" font-size: 13px;">{{16721063}}</span></div>
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/detail/'+o.url" >
+                                        <router-link :to="'/gallery/detail/'+o.url+'/'+o.thumb" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -94,14 +94,16 @@
                         <el-col :span="12">
                             <div >
                                 <el-image
-                                        style="width: 470px; height: 380px"
-                                        :src="lessonImageSrc"
-                                        :fit="fit"></el-image>
+                                        style="width: 500px; height: 300px"
+                                        :src="ImageSrc"
+                                        ></el-image>
                             </div>
                         </el-col>
                         <el-col :span="10" :offset="1">
                             <div class="middle-style"></div>
-                            <h1>课程介绍</h1>
+                            <h1>{{cname}}</h1>
+                            <h3>课程介绍</h3>
+
                             <div class="intro-font-style intro-font" >{{courseInfo}}</div><el-divider></el-divider>
                         </el-col>
                     </el-row>
@@ -112,18 +114,16 @@
 </template>
 
 <script>
-    import {search} from "../../api/HomePage";
-    import {terms} from "../../api/course";
-
+    import {search,courseInfo} from "../../api/HomePage";
+    import { terms} from "../../api/course";
+    import global from '@/Base.vue'
     export default {
-        name: "lesson",
+        name: "project",
         data(){
             return{
-                courseInfo:'\t走进软件是信息类各专业的入门性导论类核心通识课程，在培养学生对信息科学和软件工程' +
-                    '知识、能力和素质方面起到先导作用，激发学生对软件工程专业的兴趣，为其它专业课的学习奠' +
-                    '定基础。',
-                lessonImageSrc:require('@/assets/course_bg.png'),
-                lesson:[],
+                courseInfo:'',
+                ImageSrc:'',
+                project:[],
                 activeIndex:"0",
                 cname:"",
                 term:[],
@@ -133,11 +133,25 @@
             }
         },
         created() {
-            this.cname=this.$route.params.cname
+            this.cid=this.$route.params.id
+            this.loadCourse()
             this.loadTerm()
             this.loadProject(0,1,this.pageSize)
         },
         methods:{
+            async loadCourse(){
+                const res=await courseInfo(this.cid);
+                if(res.code==200)
+                {
+                    this.cname=res.data.name
+                    this.courseInfo=res.data.info
+                    this.ImageSrc=global.BACKEND_URL+'/img/'+res.data.thumb
+                    console.log(this.ImageSrc)
+                }
+                else
+                    console.log(res)
+
+            },
             currentChange(current){
                 this.loadProject(this.activeIndex,current,this.pageSize)
             },
@@ -150,13 +164,15 @@
                     console.log(res)
             },
             async loadProject(tid,page,size){
-                const res=await search(this.cname,"",tid,"",page,size);
+                const res=await search(this.cid,"",tid,"",page,size);
                 if(res.code==200){
-
-                    this.lesson=res.data.res
+                    this.project=res.data.res
                     this.tot=res.data.tot
-                    console.log(this.lesson)
-
+                    console.log(this.project)
+                    if(this.project)
+                        this.project.forEach(o =>{
+                            o.src=global.BACKEND_URL+'/img/'+o.thumb
+                        })
                 }
                 else
                     console.log(res)
@@ -285,7 +301,7 @@
     }
 
 
-    .lessonimage {
+    .projectimage {
         width: 100%;
         display: block;
         height: 200px;

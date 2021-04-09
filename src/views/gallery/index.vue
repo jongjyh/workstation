@@ -6,7 +6,6 @@
             <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
             <el-menu-item class="menu-item-style" index="1">回忆录</el-menu-item>
                 <el-menu-item index="2">优秀作品</el-menu-item>
-<!--                <el-menu-item index="3">学生风采</el-menu-item>-->
                 <el-menu-item index="4">活动剪影</el-menu-item>
                 <el-menu-item index="5">关于我们</el-menu-item>
         </el-menu></div>
@@ -23,9 +22,15 @@
             <div class="screen-style">
                 <template>
                     <el-carousel :interval="4000" type="card" height="400px">
-                        <el-carousel-item v-for="item in 6" :key="item">
-                            <h3 class="medium">{{ item }}</h3>
+
+
+
+                        <el-carousel-item v-for="item in carousel" :key="item"><router-link :to="'/gallery/detail/'+item.url">
+                            <el-image
+                                    :src="item.src"
+                                    :fit="fit"></el-image></router-link>
                         </el-carousel-item>
+
                     </el-carousel>
                 </template>
             </div>
@@ -36,12 +41,10 @@
                     <h2>课程</h2>
                 </div></el-col>
             </el-row>
-            <el-row type="flex" justify="center">
-                <el-col :span="17"><div class="content-style">
-                    <el-row :gutter="24" >
-                        <el-col :span="8" v-for="(o, index) in lesson" :key="o.name" style="margin-bottom: 25px">
+            <el-row :gutter="24" type="flex" justify="space-around">
+                <el-col :span="6" v-for="(o, index) in lesson" :key="o.name" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="lessonimage">
+                                <el-image :src="o.src" style="height: 300px"/>
                                 <div style="padding: 14px;">
                                     <h3 style="text-align: center">{{o.name}}</h3>
 
@@ -54,47 +57,7 @@
                                 </div>
                             </el-card>
                         </el-col>
-                    </el-row>
-                </div>
-                </el-col>
             </el-row>
-
-            <!--学生风采-->
-
-            <!--<el-row  >
-                <el-col :span="24"><div class="title-style">
-                    <h2>学生风采</h2>
-                </div></el-col>
-            </el-row>
-            <el-row type="flex" justify="center">
-                <el-col :span="17"><div class="content-style">
-                    <el-row>
-                        <el-col :span="12">
-                            <div style="height: 380px;width: 470px">
-                                <el-image :src="src" ></el-image>
-                            </div>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
-                            <h1>自我介绍</h1>
-                            <div class="intro-font-style">姓名：小王</div>
-                            <div class="intro-font-style">小班： 1666666</div>
-                            <div class="intro-font-style intro-font" style="height: 80px">一个简单的自我介绍咯</div>
-                            <el-divider></el-divider>
-                            <h4>邮箱</h4>
-                            <div class="intro-font-style intro-font">522963890@qq.com</div>
-                        </el-col>
-                    </el-row>
-                    <el-row type="flex" justify="center">
-                        <el-col :span="5">
-                            <el-pagination
-                                    layout="prev, pager, next"
-                                    :total="50">
-                            </el-pagination>
-                        </el-col>
-                    </el-row>
-                </div></el-col>
-            </el-row>-->
-            <!--优秀作品-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
                     <h2>优秀作品</h2>
@@ -105,8 +68,8 @@
                     <el-row :gutter="24" >
                         <el-col :span="8" v-for="(o, index) in projects" :key="o" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <router-link :to="'/gallery/detail/'+o.url">
-                                    <img :src="o.src" class="image">
+                                <router-link :to="'/gallery/detail/'+o.url+'/'+o.thumb">
+                                    <el-image :src="o.src" style="height: 200px"/>
                                 </router-link>
 
                                 <div style="padding: 14px;">
@@ -176,7 +139,7 @@
 <script>
     import {search} from '@/api/HomePage'
     import {courseName} from "@/api/course";
-
+    import global from '@/Base.vue'
     export default {
         name: "index",
         data(){
@@ -185,6 +148,7 @@
                 projects:[],
                 lesson:[],
                 total:0,
+                carousel:[],
                 src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
             }
         },
@@ -194,18 +158,31 @@
               if(res.code==200)
               {
                   this.lesson=res.data;
+                  if(this.lesson)
+                  this.lesson.forEach(o =>{
+                      o.src=global.BACKEND_URL+'/img/'+o.thumb
+                  })
+                  console.log(this.lesson)
+
               }else
                   console.log(res)
 
           },
           async loadProjects(){
-              const res=await search('',false,)
+              //搜索推荐的作品
+              const res=await search("",true)
               if(res.code==200)
               {
                   let projectList=res.data.res;
-                  this.total=res.data.tot
-                  this.projects=projectList
+                  this.total=res.data.tot;
+                  this.projects=projectList;
                   console.log(this.projects)
+                  if(this.projects) {
+                      this.projects.forEach(o => {
+                          o.src = global.BACKEND_URL + '/img/' + o.thumb
+                      })
+                  }
+                  this.carousel=this.projects.slice(0,5)
 
               }else
                   console.log(res)
@@ -256,7 +233,6 @@
     }
     .content-style{
         margin-bottom: 80px;
-
     }
     .menu-item-style{
         margin-left: 20px;

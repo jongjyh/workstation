@@ -43,7 +43,7 @@ export const constantRoutes = [
   }
 
   ,{
-    path: '/gallery/lesson/:cname',
+    path: '/gallery/lesson/:id',
     name: 'lesson',
     hidden:true,
     // route level code-splitting
@@ -57,7 +57,7 @@ export const constantRoutes = [
     }
   }
   ,{
-    path: '/gallery/detail/:url',
+    path: '/gallery/detail/:url/:thumb',
     name: 'detail',
     hidden:true,
     // route level code-splitting

@@ -20,6 +20,7 @@ export const courseName = () => {
     })
 }
 
+
 export const creatCourse = (data) => {
     return service({
         url: "/course",
