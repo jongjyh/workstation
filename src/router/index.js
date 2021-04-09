@@ -57,7 +57,7 @@ export const constantRoutes = [
     }
   }
   ,{
-    path: '/gallery/detail/:url/:thumb',
+    path: '/gallery/detail/:url',
     name: 'detail',
     hidden:true,
     // route level code-splitting

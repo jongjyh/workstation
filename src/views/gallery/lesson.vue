@@ -3,8 +3,8 @@
         <el-header class="header-style">
             <div></div>
             <el-menu :default-active="activeIndex" class="el-menu-style" mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
-                <el-menu-item class="menu-item-style" index="1">作品集</el-menu-item>
-                <el-menu-item class="menu-item-style" index="2">关于本课程</el-menu-item>
+                <el-menu-item class="menu-item-style" index="lessonTag">作品集</el-menu-item>
+                <el-menu-item class="menu-item-style" index="aboutTag">关于本课程</el-menu-item>
             </el-menu>
             <div>
                 <router-link to="/login" >
@@ -25,7 +25,7 @@
             <!--作品集-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2>作品集</h2>
+                    <h2 id="lessonTag">作品集</h2>
                 </div></el-col>
             </el-row>
             <!--目录-->
@@ -58,7 +58,7 @@
                                     <span style="color: #999999; font-size: 13px; ">学号：</span>
                                     <span style=" font-size: 13px;">{{16721063}}</span></div>
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/detail/'+o.url+'/'+o.thumb" >
+                                        <router-link :to="'/gallery/detail/'+o.url" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -85,7 +85,7 @@
 
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2>关于本课程</h2>
+                    <h2 id="aboutTag">关于本课程</h2>
                 </div></el-col>
             </el-row>
             <el-row type="flex" justify="center">
@@ -182,9 +182,9 @@
                 //返回第一页
                 this.page=1
             },
-            handleSelect(){
-
-            }
+            handleSelect(tag){
+                document.querySelector("#"+tag).scrollIntoView(true);
+            },
         },
 
     }

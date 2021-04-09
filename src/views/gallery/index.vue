@@ -4,10 +4,10 @@
             <div></div>
             <div class="el-menu-style">
             <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
-            <el-menu-item class="menu-item-style" index="1">回忆录</el-menu-item>
-                <el-menu-item index="2">优秀作品</el-menu-item>
-                <el-menu-item index="4">活动剪影</el-menu-item>
-                <el-menu-item index="5">关于我们</el-menu-item>
+            <el-menu-item class="menu-item-style" index="lessonTag">课程集</el-menu-item>
+                <el-menu-item index="projectTag">优秀作品</el-menu-item>
+                <el-menu-item index="memoryTag">回忆录</el-menu-item>
+                <el-menu-item index="aboutTag">关于我们</el-menu-item>
         </el-menu></div>
             <div>
                 <router-link to="/login" >
@@ -22,15 +22,11 @@
             <div class="screen-style">
                 <template>
                     <el-carousel :interval="4000" type="card" height="400px">
-
-
-
                         <el-carousel-item v-for="item in carousel" :key="item"><router-link :to="'/gallery/detail/'+item.url">
                             <el-image
                                     :src="item.src"
                                     :fit="fit"></el-image></router-link>
                         </el-carousel-item>
-
                     </el-carousel>
                 </template>
             </div>
@@ -38,7 +34,7 @@
             <!--课程-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2>课程</h2>
+                    <h2 id="lessonTag">课程</h2>
                 </div></el-col>
             </el-row>
             <el-row :gutter="24" type="flex" justify="space-around">
@@ -60,7 +56,7 @@
             </el-row>
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2>优秀作品</h2>
+                    <h2 id="projectTag">优秀作品</h2>
                 </div></el-col>
             </el-row>
             <el-row type="flex" justify="center">
@@ -68,7 +64,7 @@
                     <el-row :gutter="24" >
                         <el-col :span="8" v-for="(o, index) in projects" :key="o" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <router-link :to="'/gallery/detail/'+o.url+'/'+o.thumb">
+                                <router-link :to="'/gallery/detail/'+o.url">
                                     <el-image :src="o.src" style="height: 200px"/>
                                 </router-link>
 
@@ -91,7 +87,7 @@
             <!--回忆录-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2>回忆录</h2>
+                    <h2 id="memoryTag">回忆录</h2>
                 </div></el-col>
             </el-row>
             <el-row type="flex" justify="center">
@@ -124,7 +120,7 @@
             <!--关于我们-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2>关于我们</h2>
+                    <h2 id="aboutTag">关于我们</h2>
                 </div></el-col>
             </el-row>
             <el-row type="flex" justify="center">
@@ -187,8 +183,8 @@
               }else
                   console.log(res)
           },
-            handleSelect(){
-
+            handleSelect(tag){
+                document.querySelector("#"+tag).scrollIntoView(true);
             },
         },
         created() {
