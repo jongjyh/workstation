@@ -30,6 +30,19 @@
                 </router-link>
             </template>
             <!-- 一级菜单的情况 end-->
+            <template v-else-if="item.name=='作品展示'">
+                <router-link :to="item.path+''+item.children[0].path" :key="index">
+                    <!--           index跟浏览器地址对应，这样菜单才能显示选中状态  -->
+                    <el-menu-item :index="item.path+''+item.children[0].path">
+                        <template slot="title">
+                            <!-- 设置icon -->
+                            <i v-if="item.meta.icon" :class="item.meta.icon"></i>
+                            <!-- 菜单名称 -->
+                            {{item.meta.title}}
+                        </template>
+                    </el-menu-item>
+                </router-link>
+            </template>
             <!-- 多级菜单 -->
             <template v-else>
                 <el-submenu :index="item.path">

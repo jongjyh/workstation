@@ -213,6 +213,7 @@
                             console.log(res)
                         Object.keys(this.form).forEach(key => this.form[key] = '');
                         this.addTaskFormVisible = false
+                        this.loadTask()
                     }else{
                         console.log('error submit!!');
                         return false;

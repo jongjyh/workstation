@@ -66,56 +66,10 @@
 
                 </el-form-item>
                 <el-form-item label="外链" >
-                    <el-input  placeholder="请输入上传链接（请填写上传按钮中得到的外链）" v-model="projectForm.url" autocomplete="off" v-if="projectForm.type!==3"></el-input>
+                    <el-input  placeholder="上传链接" v-model="projectForm.url" autocomplete="off" v-if="projectForm.type!==3" disabled="true"></el-input>
                     <el-input  placeholder="请输入项目链接（请填写URL链接）" v-model="projectForm.url" autocomplete="off" v-else></el-input>
                     <el-link type="primary" v-if="projectForm.type!==3" @click="uploadVisible=true">上传项目</el-link>
-                    <el-dialog
-
-                            title="我的上传"
-                            :visible.sync="uploadVisible"
-                            width="30%"
-                            center
-                            append-to-body>
-                        <div class="center-style">
-
-
-                        <div class="center-style"><span >请上传你的Zip文件，并把获得的外链填入上传链接</span></div>
-                        <el-upload
-                                accept=".zip"
-                                class="upload-demo"
-                                drag
-                                action=""
-                                :show-file-list=false
-                                :http-request="Upload"
-                                :file-list="fileList"
-                        >
-                            <i class="el-icon-upload"></i>
-                            <div class="center-style">将文件拖到此处，或<em>点击上传</em></div>
-                            <div class="center-style" slot="tip">只能上传单个压缩包文件，且不超过10Mb</div>
-
-                        </el-upload>
-                            <template>
-                                <el-table
-                                        :data="fileList"
-                                        stripe
-                                        style="width: 100%">
-                                    <el-table-column
-                                            prop="name"
-                                            label="文件名"
-                                            width="180">
-                                    </el-table-column>
-                                    <el-table-column
-                                            prop="url"
-                                            label="外链"
-                                            width="180">
-                                    </el-table-column>
-                                </el-table>
-                            </template>
-                        </div>
-                        <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="uploadVisible = false">确 定</el-button>
-  </span>
-                    </el-dialog>
+                    <upload-card :uploadVisible.sync="uploadVisible" :type="2" @func="getfileURL"></upload-card>
                 </el-form-item>
                 <el-form-item label="项目简介">
                     <el-input type="textarea"
@@ -132,36 +86,7 @@
                 <el-button type="primary" @click="saveProjectInfoForm(projectForm)">保 存</el-button>
             </div>
         </el-dialog>
-        <el-dialog
-                title="上传缩略图"
-                :visible.sync="uploadImgVisible"
-                width="30%"
-                center
-                >
-            <div class="center-style">
 
-
-                <div class="center-style"><span >请上传你的项目缩略图，请上传长宽比大约为740*400的图片</span></div>
-                <el-upload
-                        accept=".jpg"
-                        class="upload-demo"
-                        drag
-                        action=""
-                        :show-file-list=false
-                        :http-request="UploadImg"
-                        :file-list="imgfileList"
-                >
-                    <i class="el-icon-upload"></i>
-                    <div class="center-style">将图片拖到此处，或<em>点击上传</em></div>
-                    <div class="center-style" slot="tip">只能上传单个图片文件，且不超过10Mb</div>
-
-                </el-upload>
-                <span>你当前缩略图外链为：{{projectForm.thumb}}</span>
-            </div>
-            <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="uploadImgVisible = false">确 定</el-button>
-  </span>
-        </el-dialog>
         <el-row v-if="role == 0">
             <el-col :span="8" >
                 <el-row >
@@ -187,6 +112,7 @@
                             <el-tooltip class="item" effect="dark" content="请上传大约长宽比为740*400的缩略图，缩略图将出现在作品展示页" placement="bottom">
                                 <el-button type="text" @click="uploadImgVisible=true" icon="el-icon-upload2">上传图片</el-button>
                             </el-tooltip>
+                            <upload-card :uploadVisible.sync="uploadImgVisible" :type="1" @func="getImgURL"></upload-card>
                         </div>
                     </div>
             </el-col>
@@ -208,7 +134,6 @@
                 </div>
             </el-col>
             <el-col :span="10"  ><div class=" bg-purple-dark student-detail" >
-
                 <el-button plain @click="gotoEditShow" icon="el-icon-edit">编辑展示页面</el-button>
                 <el-button plain @click="editprojectFormVisible = true" icon="el-icon-edit-outline">编辑项目信息</el-button>
                 <el-tooltip  content="您只能提交一次！当您是一名队员或者已经超时，该按钮不可用" placement="bottom" effect="light">
@@ -402,9 +327,10 @@
     import TeamCard from "./components/teamCard";
     import {uploadImg} from "../../api/submit";
     import global from '@/Base.vue'
+    import UploadCard from "./components/uploadCard";
     export default {
         name: "detail",
-        components: {TeamCard},
+        components: {UploadCard, TeamCard},
         data(){
             var checkDate  = (rule, value, callback) => {
                 if (value === '') {
@@ -520,56 +446,15 @@
               this.leader=status;
               console.log(this.leader)
             },
-            async Upload(param){
-                let params = new FormData()
-                params.append("file", param.file)
-                let filename=param.file.name
-                const res=await upload(params);
-                if(res.code==200)
-                {
-                    let data=res.data;
-                    let file={
-                        name:filename,
-                        url:data,
-                    }
-                    this.fileList.push(file)
-                }
-                else
-                {
-                    if(res.data.code==413)
-                    {
-                        this.$message.error("上传文件过大")
-                    }
-                    console.log(res)
-                }
+            getfileURL(data){
+                this.projectForm.url=data
             },
-            async UploadImg(param){
-                let params = new FormData()
-                params.append("file", param.file)
-                let filename=param.file.name
-                const res=await uploadImg(params,740,400);
-                if(res.code==200)
-                {
-                    this.$message.success("上传图片成功")
-                    let data=res.data;
-                    let file={
-                        name:filename,
-                        url:data,
-                    }
-                    this.imgfileList.push(file)
-                    this.projectForm.thumb=data
-                    localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/thumb',this.projectForm.thumb)
-                    this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
-                }
-                else
-                {
-                    if(res.data.code==413)
-                    {
-                        this.$message.error("上传文件过大")
-                    }
-                    console.log(res)
-                }
+            getImgURL(data){
+                this.projectForm.thumb=data
+                localStorage.setItem(this.uid+'/'+this.cid+'/'+this.id+'/thumb',this.projectForm.thumb)
+                this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
             },
+
             async Recommend(index, item){
                 const res= await setRecommend({},this.id,item.uid)
                 if(res.code == 200)
@@ -745,10 +630,11 @@
                 this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
             },
             gotoEditShow(){
-                if(this.projectForm.readme==null)
+                if(this.commitInfo.status===false && this.projectForm.readme==null)
                 this.$router.push(
                 {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid}})
                 else{
+                    console.log(this.projectForm.readme)
                     this.$router.push(
                         {name: 'editor', params: {cid: this.cid,eid: this.id, uid: this.uid,readme:this.projectForm.readme}})
                 }

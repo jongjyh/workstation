@@ -90,7 +90,7 @@
             this.cid=this.$route.params.cid;
             this.uid=this.$route.params.uid;
             this.eid=this.$route.params.eid;
-            if(this.$route.params.readme && this.$route.params.readme!==undefined)
+            if(typeof(this.$route.params.readme)==="string")
             {
                 this.text=this.$route.params.readme
             }

@@ -14,12 +14,55 @@ export const constantRoutes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/layout.vue'),
     meta: {
       title: '作品展示', //菜单名称
       roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-      icon: 'el-icon-info' //菜单左侧的icon图标
-    }
+      icon: 'el-icon-trophy' //菜单左侧的icon图标
+    },
+    children:[
+      {
+        path: '',
+        hidden:true,
+        component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/index.vue'),
+        name: '展示首页',
+        meta: {
+          title:'选择课程',
+          role: ['teacher','student'],
+          icon: "el-icon-success"
+        },
+      },
+      {
+        path: '/gallery/lesson/:id',
+        name: 'lesson',
+        hidden:true,
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/lesson.vue'),
+        meta: {
+          title: '作品展示', //菜单名称
+          roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+          icon: 'el-icon-info' //菜单左侧的icon图标
+        }
+      },
+      {
+        path: '/gallery/detail/:url',
+        name: 'detail',
+        hidden:true,
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/detail.vue'),
+        meta: {
+          title: '作品展示', //菜单名称
+          roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+          icon: 'el-icon-info' //菜单左侧的icon图标
+        }
+      }
+    ]
+
+
   },
   {
     path: '/index',
@@ -40,37 +83,7 @@ export const constantRoutes = [
         }
       }
     ]
-  }
-
-  ,{
-    path: '/gallery/lesson/:id',
-    name: 'lesson',
-    hidden:true,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/lesson.vue'),
-    meta: {
-      title: '作品展示', //菜单名称
-      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-      icon: 'el-icon-info' //菜单左侧的icon图标
-    }
-  }
-  ,{
-    path: '/gallery/detail/:url',
-    name: 'detail',
-    hidden:true,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '@/views/gallery/detail.vue'),
-    meta: {
-      title: '作品展示', //菜单名称
-      roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-      icon: 'el-icon-info' //菜单左侧的icon图标
-    }
-  }
-  ,
+  },
     /*登录*/
   {
     path: '/login',

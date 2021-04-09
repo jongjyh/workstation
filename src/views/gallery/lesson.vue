@@ -1,20 +1,5 @@
 <template>
-    <el-container>
-        <el-header class="header-style">
-            <div></div>
-            <el-menu :default-active="activeIndex" class="el-menu-style" mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
-                <el-menu-item class="menu-item-style" index="lessonTag">作品集</el-menu-item>
-                <el-menu-item class="menu-item-style" index="aboutTag">关于本课程</el-menu-item>
-            </el-menu>
             <div>
-                <router-link to="/login" >
-                    <el-link :underline="false">转去登录</el-link>
-                </router-link>
-
-            </div>
-        </el-header>
-        <!--内容-->
-        <el-main class="main-style">
             <div class="screen-style">
                 <el-image
                         style="width: 1200px; height: 600px"
@@ -25,7 +10,7 @@
             <!--作品集-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
-                    <h2 id="lessonTag">作品集</h2>
+                    <h2 id="projectTag">作品集</h2>
                 </div></el-col>
             </el-row>
             <!--目录-->
@@ -54,9 +39,6 @@
                                     <div style="text-align: center;font-weight: bolder;margin-top: 10px;margin-bottom: 5px" >{{o.title}}</div>
                                     <span style="color: #999999; font-size: 13px">作者：</span>
                                     <span style=" font-size: 13px ">{{o.uname}}</span>
-                                    <div>
-                                    <span style="color: #999999; font-size: 13px; ">学号：</span>
-                                    <span style=" font-size: 13px;">{{16721063}}</span></div>
                                     <div class="bottom clearfix">
                                         <router-link :to="'/gallery/detail/'+o.url" >
                                             <el-button type="text" class="button">进入主页</el-button>
@@ -108,9 +90,7 @@
                         </el-col>
                     </el-row>
                 </div></el-col>
-            </el-row>
-        </el-main>
-    </el-container>
+            </el-row></div>
 </template>
 
 <script>
@@ -121,6 +101,20 @@
         name: "project",
         data(){
             return{
+                tags:{
+                    items:[
+                    {
+                        label:'优秀作品',
+                        index:'projectTag'
+                    },
+                    {
+                        label:'关于本课程',
+                        index:'aboutTag'
+                    },
+                    ],
+                    name:"",
+                    showNav:true,
+                },
                 courseInfo:'',
                 ImageSrc:'',
                 project:[],
@@ -137,6 +131,7 @@
             this.loadCourse()
             this.loadTerm()
             this.loadProject(0,1,this.pageSize)
+            this.$emit('postChildInfo',this.tags)
         },
         methods:{
             async loadCourse(){
@@ -144,6 +139,7 @@
                 if(res.code==200)
                 {
                     this.cname=res.data.name
+                    this.tags.name=res.data.name
                     this.courseInfo=res.data.info
                     this.ImageSrc=global.BACKEND_URL+'/img/'+res.data.thumb
                     console.log(this.ImageSrc)
@@ -182,9 +178,7 @@
                 //返回第一页
                 this.page=1
             },
-            handleSelect(tag){
-                document.querySelector("#"+tag).scrollIntoView(true);
-            },
+
         },
 
     }
@@ -207,29 +201,6 @@
         text-align: center;
     }
 
-    .year{
-        text-align: center;
-        list-style-type: none;
-        padding: 0; /* remove default padding and all margins! */
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
-    .year li{
-        color: #555;
-        float: left;
-        width: 120px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-    }
-
     .intro-font-style{
         font-family:Microsoft YaHei;
     }
@@ -237,19 +208,6 @@
         color: #808080;
         margin-top: 15px;
         height: 100%;
-    }
-    .header-style{
-        box-shadow: 0 0 4px #c7c7c7;
-        background-color: #F6F6F6;
-        display: flex;
-        justify-content: space-between;
-    }
-    .el-menu-style{
-        background-color: #F6F6F6;
-
-    }
-    .main-style{
-        background-color: white;
     }
     .title-style{
         text-align: center;
@@ -259,10 +217,6 @@
     }
     .content-style{
         margin-bottom: 80px;
-    }
-    .menu-item-style{
-        margin-left: 20px;
-        margin-right: 20px;
     }
     .el-carousel__item h3 {
         color: #475669;
@@ -276,18 +230,6 @@
         justify-content: center;
         margin-bottom: 100px;
     }
-    .el-carousel__item:nth-child(2n) {
-        background-color: #99a9bf;
-    }
-
-    .el-carousel__item:nth-child(2n+1) {
-        background-color: #d3dce6;
-    }
-    .intro {
-        font-size: 13px;
-        color: #999;
-    }
-
     .bottom {
         margin-top: 13px;
         line-height: 12px;

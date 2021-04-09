@@ -1,7 +1,5 @@
 <template>
     <div class="container">
-        <el-page-header @back="goBack" content="详情页面">
-        </el-page-header>
         <div class="content-style">
             <div class="introduce">
                 <el-row :gutter="30">
@@ -48,11 +46,16 @@
         name: "detail",
         data(){
             return{
+                tags:{
+                    items:[],
+                    name:"",
+                    showNav:true,
+                },
                 url:"",
                 markdown:"",
                 src:'',
                 basic:{},
-                activeNames:1
+                activeNames:["1","2","3","4"]
             }
         },
         props:{
@@ -61,6 +64,7 @@
         created() {
             this.url=this.$route.params.url
             this.loadMarkDown()
+            this.$emit('postChildInfo',this.tags)
         },
         methods:{
             goBack(){
@@ -72,6 +76,7 @@
                     this.basic=res.data
                     this.basic.showURL=global.BACKEND_URL+"/"+this.basic.url
                     this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
+                    this.tags.name=this.basic.name
                     console.log(this.src)
                     this.markdown=res.data.readme
                     console.log(res.data)

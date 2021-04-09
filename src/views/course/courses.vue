@@ -20,7 +20,6 @@
                 </el-col>
                 <el-col :span=4 >
                     <el-button type="primary"  @click="addCourseFormVisible = true"><i class="el-icon-plus" style="margin-right: 10px"></i>创建新课程</el-button>
-
                 </el-col>
             </el-row>
             <!--课程卡片div-->
@@ -31,7 +30,7 @@
                         <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
                         <div style="padding: 10px 5px;">
                             <span >{{item.name}}</span>
-                            <span style="float: right font-size: 14px; color: #999; display: block;">{{item.tname}}</span>
+                            <span style="float: right ;font-size: 14px; color: #999; display: block;">{{item.tname}}</span>
                             <div class="bottom clearfix">
                                 <span class="time">教师：{{item.teacher}}</span>
                                 <router-link :to=" '/courses/courseInfo/'+item.cid" :key="item.cid">
@@ -139,6 +138,7 @@
                             console.log(res)
                         Object.keys(this.form).forEach(key => this.form[key] = '');
                         this.addCourseFormVisible = false
+                        this.loadCourses()
                     }
                     else {
                         console.log('error submit!!');
