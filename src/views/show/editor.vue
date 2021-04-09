@@ -5,19 +5,22 @@
         <v-md-editor v-model="text" height="600px"></v-md-editor>
         <div class="bottom-wrapper">
             <el-row :gutter="20">
-                <el-col :span="6">
+                <el-col :span="15">
                     <el-upload
                             class="upload-demo"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
+                            action=""
+                            :http-request="UploadImg"
                             :file-list="fileList"
                             list-type="picture">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb,上传成功后右键缩略图复制图片地址即可</div>
+                        <el-tooltip content="我们提供一个小型的上传服务器，点击按钮上传你的图片，然后把图片的外链插入到你的展示文档之中">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                        </el-tooltip>
+                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                     </el-upload>
+                    <!--<upload-card @func="getImgURL" :type="1" :uploadVisible.sync="uploadImgVisible">
+                    </upload-card>-->
                 </el-col>
-                <el-col :span="4" :offset="14"><div class="grid-content bg-purple">
+                <el-col :span="4" offset="5"><div class="grid-content bg-purple">
                     <el-button type="primary" plain @click="saveReadMe()">保存</el-button>
                     <el-button  plain @click="goOff()">取消</el-button></div></el-col>
             </el-row>
@@ -28,10 +31,15 @@
 </template>
 
 <script>
+    import {uploadImg} from "@/api/submit";
+    import UploadCard from "../task/components/uploadCard";
+    import global from '@/Base.vue'
     export default {
         name: "editor",
+        components: {UploadCard},
         data() {
             return {
+
                 text: '<h1 align="center">项目名称</h1>\n' +
                     '\n' +
                     '<p align="center">\n' +
@@ -82,11 +90,13 @@
                 eid:'',
                 cid:'',
                 uid:'',
-                fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+                uploadImgVisible:false,
+                fileList: []
             };
 
         },
         created(){
+
             this.cid=this.$route.params.cid;
             this.uid=this.$route.params.uid;
             this.eid=this.$route.params.eid;
@@ -96,8 +106,31 @@
             }
         },
         methods:{
+            async UploadImg(param){
+                let params = new FormData()
+                params.append("file", param.file)
+                const res=await uploadImg(params,740,400);
+                if(res.code==200)
+                {
+                    this.$message.success("上传图片成功")
+                    let data=res.data;
+                    this.fileList.push({name:global.BACKEND_URL+'/img/'+data,url:global.BACKEND_URL+'/img/'+data})
+                }
+                else
+                {
+                    if(res.data.code==413)
+                    {
+                        this.$message.error("上传文件过大")
+                    }
+                    console.log(res)
+                }
+            },
             goOff(){
                 this.$router.go(-1)
+            },
+            getImgURL(data){
+                let src=global.BACKEND_URL+'/img/'+data.url
+                this.fileList.push({name:data.name,url:src})
             },
             saveReadMe(){
                 window.localStorage.setItem(this.uid+'/'+this.cid+'/'+this.eid+'/readme',this.text);

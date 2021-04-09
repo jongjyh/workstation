@@ -282,7 +282,7 @@
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
                                 :current-page="currentPage"
-                                :page-sizes="[2, 10, 300, 400]"
+                                :page-sizes="[5, 10, 300, 400]"
                                 :page-size="pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
                                 :total="count">
