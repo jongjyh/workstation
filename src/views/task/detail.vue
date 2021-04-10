@@ -238,7 +238,7 @@
                                 </el-table-column>
                                 <el-table-column v-if="basicForm.team"
                                         label="队长"
-                                        width="130">
+                                        width="110">
                                     <template slot-scope="scope">
                                         <div slot="reference" class="name-wrapper">
                                             <el-tag size="medium" type="danger" v-if="!scope.row.groups||scope.row.groups.length===1">无队伍</el-tag>
@@ -646,6 +646,7 @@
                 return startTime>endTime
             },
             async commitProject(){
+
                 const res=await commit(this.projectForm,this.id)
                 if(res.code==200)
                 {
