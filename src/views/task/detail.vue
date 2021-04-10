@@ -136,9 +136,9 @@
             <el-col :span="10"  ><div class=" bg-purple-dark student-detail" >
                 <el-button plain @click="gotoEditShow" icon="el-icon-edit">编辑展示页面</el-button>
                 <el-button plain @click="editprojectFormVisible = true" icon="el-icon-edit-outline">编辑项目信息</el-button>
-                <el-tooltip  content="您只能提交一次！当您是一名队员或者已经超时，该按钮不可用" placement="bottom" effect="light">
+                <el-tooltip  content="当您是一名队员或者已经超时，该按钮不可用" placement="bottom" effect="light">
                     <div style="margin-left: 10px">
-                        <el-button plain @click="commitProject" :disabled="!this.leader||this.commitInfo.status||commitTimeLimited()" icon="el-icon-check">提交我的作业</el-button>
+                        <el-button plain @click="commitProject" :disabled="!this.leader||commitTimeLimited()" icon="el-icon-check">提交我的作业</el-button>
                     </div>
                 </el-tooltip>
 

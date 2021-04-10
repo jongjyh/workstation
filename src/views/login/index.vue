@@ -110,7 +110,7 @@
             };
         },
         created() {
-            this.toCloud='https://cloud.beihangsoft.cn/?service=http://'+window.location.host+'/login'
+            this.toCloud='https://www.scs.buaa.edu.cn/?service=http://'+window.location.host+'/login'
             if(this.$route.query.authorization){
                 this.logByCloudSoft(this.$route.query.authorization)
             }
