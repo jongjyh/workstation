@@ -172,7 +172,7 @@
                     ],
                     name: [
                         { required: true, message: '请输入真实姓名', trigger: 'blur' },
-                        { min: 3, message: '长度不小于 3 个字符', trigger: 'blur' }
+                        { min: 1, message: '长度不小于 1 个字符', trigger: 'blur' }
                     ],
                     id:[
                         { required: true, message: '学号不能为空', trigger: 'blur' },

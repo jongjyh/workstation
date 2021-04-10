@@ -97,7 +97,7 @@
                             sortable>
                     </el-table-column>
                     <el-table-column
-                            prop="teacher"
+                            prop="teacher_name"
                             label="教师"
                             sortable>
                     </el-table-column>

@@ -241,7 +241,7 @@
                                         width="130">
                                     <template slot-scope="scope">
                                         <div slot="reference" class="name-wrapper">
-                                            <el-tag size="medium" type="danger" v-if="scope.row.groups.length===1">无队伍</el-tag>
+                                            <el-tag size="medium" type="danger" v-if="!scope.row.groups||scope.row.groups.length===1">无队伍</el-tag>
                                             <el-tag size="medium" type="success" v-else-if="scope.row.groups.length!==1">队伍中</el-tag>
                                         </div>
                                     </template>
@@ -312,7 +312,7 @@
                 <team-card  :eid="id"
                             :uid="uid"
                             :group="commitInfo.groups"
-                            v-if="projectForm.team"
+                            v-if="role===1 && basicForm.team"
                             @change="handleTeamStatusChange"
                 />
             </el-col>
@@ -547,7 +547,7 @@
                         this.count = data.length
                         this.students=res2.data
                         this.students.forEach(item =>{
-                            item.name=item.groups.find( x => x.account===item.uid).name
+                           item.name=item.groups.find( x => x.account===item.uid).name
                             if(item.status==true)
                                 ++this.submitCount;
                         })
