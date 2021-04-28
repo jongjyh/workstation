@@ -419,7 +419,8 @@
         created(){
             this.uid=this.$store.getters['user/id']
             let role =  this.$store.getters['user/role']
-            if(role === 'teacher')
+            console.log(role)
+            if(role === 'teacher'||role==='admin')
                 this.role= 0
             else
                 this.role = 1
@@ -569,6 +570,7 @@
                     {
                         this.commitInfo=res.data
                         this.loadProjectInfoFormFromLocal()
+                        console.log(this.commitInfo)
                         //不在载入服务器的信息，以本地为准
 /*                        else{
                             this.projectForm={...this.commitInfo}

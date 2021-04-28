@@ -91,8 +91,13 @@
             },
             loadData(data){
                 this.basic=data
-                this.basic.showURL=global.BACKEND_URL+"/"+this.basic.url
-                this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
+                this.basic.showURL=global.BACKEND_URL+"/"+this.basic.thumb
+                if(this.basic.thumb==='null')
+                {
+
+                    this.src=require('@/assets/project_stand.jpeg')
+                }else
+                    this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
                 this.tags.name=this.basic.name
                 this.markdown=data.readme
                 console.log(data)

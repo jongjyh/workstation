@@ -1,32 +1,25 @@
 <template>
     <el-container style="height: 100%; border: 1px solid #eee">
-            <el-menu :default-active="$route.path" :collapse="isCollapse" >
+            <el-menu :default-active="$route.path" :collapse="isCollapse"  router="true" class="el-menu-vertical-demo">
                 <div class="aside-title"  >
                     <div class="aside-title-icon">
                         <el-image :src="logoimg" style="width: 100px"/>
+
                     </div>
                     <h1 class="icon-title" v-show="!isCollapse">优秀作品展示系统</h1>
-                    <div v-show="isCollapse" class="aside-title-icon">
                 </div>
-                </div>
-                <router-link to="/" :key="0">
-                <el-menu-item index="0" >
+                <el-menu-item index="/" >
                     <i class="el-icon-trophy"></i>
                     <span slot="title">作品展示</span>
                 </el-menu-item>
-                </router-link>
-                <router-link to="/courses/course" :key="1">
-                <el-menu-item index="/courses/course" v-if="this.role==='teacher'">
+                <el-menu-item index="/courses/course" v-if="this.role==='teacher'||this.role==='admin'">
                     <i class="el-icon-menu"></i>
                     <span slot="title">课程管理</span>
                 </el-menu-item>
-                </router-link>
-                <router-link to="/task/filter">
                 <el-menu-item index="/task/filter" v-if="this.role==='student'">
                     <i class="el-icon-s-order"></i>
                     <span slot="title">作业管理</span>
                 </el-menu-item>
-                </router-link>
             </el-menu>
 
         <el-container>
@@ -98,6 +91,10 @@
     </el-container>
 </template>
 <style>
+    .el-menu-vertical-demo:not(.el-menu--collapse) {
+        width: 250px;
+        min-height: 400px;
+    }
     a{
         text-decoration: none;
     }

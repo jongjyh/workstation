@@ -3,10 +3,12 @@
             <div class="screen-style">
                 <template>
                     <el-carousel :interval="4000" type="card" height="400px">
-                        <el-carousel-item v-for="item in carousel" :key="item"><router-link :to="'/gallery/detail/'+item.url">
+                        <el-carousel-item v-for="(item,index) in carousel" :key="index"><router-link :to="'/gallery/detail/1/'+item.url">
                             <el-image
                                     :src="item.src"
-                                    :fit="fit"></el-image></router-link>
+                                    fit="fill"
+                                    style="height: 400px; width: 740px"
+                            ></el-image></router-link>
                         </el-carousel-item>
                     </el-carousel>
                 </template>
@@ -19,7 +21,7 @@
                 </div></el-col>
             </el-row>
             <el-row :gutter="24" type="flex" justify="space-around" v-loading="loading">
-                <el-col :span="6" v-for="(o, index) in lesson" :key="o.name" style="margin-bottom: 25px">
+                <el-col :span="6" v-for="(o, index) in lesson" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                 <el-image :src="o.src" style="height: 300px"/>
                                 <div style="padding: 14px;">
@@ -43,7 +45,7 @@
             <el-row type="flex" justify="center" v-loading="loading">
                 <el-col :span="17"><div class="content-style">
                     <el-row :gutter="24" >
-                        <el-col :span="8" v-for="(o, index) in projects" :key="o" style="margin-bottom: 25px">
+                        <el-col :span="8" v-for="(o, index) in projects" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                 <router-link :to="'/gallery/detail/1/'+o.url">
                                     <el-image :src="o.src" style="height: 200px"/>
@@ -51,14 +53,16 @@
 
                                 <div style="padding: 14px;">
                                     <h3 style="text-align: center">{{o.title}}</h3>
-                                    <div class="bottom clearfix">
-                                        <span class="intro">{{ o.uname }}</span>
-                                    </div>
+
                                     <div class="bottom clearfix">
                                         <span class="intro">{{ o.info }}</span>
                                     </div>
+                                    <div class="bottom clearfix left">
+                                        <i class="el-icon-user-solid"></i>
+                                    <span class="intro">  {{ o.uname }}</span>
+                                     </div>
                                     <div class="bottom clearfix right">
-                                        <span class="intro">指导：{{ o.teacher }}</span>
+                                        <span class="intro">指导教师: {{ o.teacher }}</span>
                                     </div>
                                 </div>
                             </el-card>
@@ -151,7 +155,7 @@
                 lesson:[],
                 total:0,
                 carousel:[],
-                src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+                src: '',
             }
         },
         methods:{
@@ -162,9 +166,12 @@
                   this.lesson=res.data;
                   if(this.lesson)
                   this.lesson.forEach(o =>{
+                      if(o.thumb==='')
+                      {
+                          o.src=require('@/assets/course_bg.png')
+                      }else
                       o.src=global.BACKEND_URL+'/img/'+o.thumb
                   })
-                  console.log(this.lesson)
 
               }else
                   console.log(res)
@@ -181,7 +188,12 @@
                   console.log(this.projects)
                   if(this.projects) {
                       this.projects.forEach(o => {
-                          o.src = global.BACKEND_URL + '/img/' + o.thumb
+                          if(o.thumb==='null')
+                          {
+
+                              o.src=require('@/assets/project_stand.jpeg')
+                          }else
+                              o.src=global.BACKEND_URL+'/img/'+o.thumb
                       })
                   }
                   this.carousel=this.projects.slice(0,5)
@@ -205,6 +217,9 @@
 </script>
 
 <style scoped>
+    .left{
+        float: left;
+    }
     .right{
         float:right;
     }

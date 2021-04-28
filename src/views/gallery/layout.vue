@@ -38,6 +38,7 @@
         },
         data(){
             return{
+                activeIndex:"1",
                 tags:[
                 ],
             }

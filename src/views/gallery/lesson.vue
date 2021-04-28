@@ -31,7 +31,7 @@
                     <el-row :gutter="24" >
                         <el-col :span="6" v-for="(o, index) in project" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <router-link :to="'/gallery/detail/'+o.url">
+                                <router-link :to="'/gallery/detail/1/'+o.url" >
                                     <img :src="o.src" class="projectimage">
                                 </router-link>
 
@@ -146,6 +146,10 @@
                     this.cname=res.data.name
                     this.tags.name=res.data.name
                     this.courseInfo=res.data.info
+                    console.log(res.data.thumb)
+                    if(res.data.thumb==='')
+                        this.ImageSrc=require('@/assets/course_bg.png')
+                    else
                     this.ImageSrc=global.BACKEND_URL+'/img/'+res.data.thumb
                     console.log(this.ImageSrc)
                 }
