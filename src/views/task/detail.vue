@@ -129,9 +129,9 @@
                     <el-col :span="12" class="time-table-time-style"><div>{{this.commitInfo.time}}</div></el-col>
                 </el-row>
                 <el-row type="flex" align="middle" justify="center">
-                    <el-tooltip  content="仅队长可以提交作业" placement="bottom" effect="light">
+                    <el-tooltip  content="仅上传源码队长可以提交作业" placement="bottom" effect="light">
                         <div>
-                            <el-button plain @click="commitProject" :disabled="!this.leader" icon="el-icon-check">提交我的作业</el-button>
+                            <el-button plain @click="commitProject" :disabled="!this.leader||this.projectForm.src_url===''||this.projectForm.src_url==='null'||this.projectForm.dist_url===''" icon="el-icon-check">提交我的作业</el-button>
                         </div>
                     </el-tooltip>
                 </el-row>
@@ -206,13 +206,24 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                        label="提交时间"
+                                        label="最新提交的版本信息"
                                         width="190">
                                     <template slot-scope="scope">
                                         <div slot="reference" class="name-wrapper">
                                             <i class="el-icon-time"></i>
                                             <span style="margin-left: 10px" >{{ scope.row.time }}</span>
                                             <span style="margin-left: 10px" v-if="scope.row.status==false">-</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="上次推荐时间"
+                                        width="190">
+                                    <template slot-scope="scope">
+                                        <div slot="reference" class="name-wrapper">
+                                            <i class="el-icon-time"></i>
+                                            <span style="margin-left: 10px" >{{ scope.row.rec_time }}</span>
+                                            <span style="margin-left: 10px" v-if="scope.row.rec_time===''">-</span>
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -236,39 +247,44 @@
                                         </div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="操作" width="350">
+                                <el-table-column label="操作" width="500">
                                     <template slot-scope="scope">
                                         <el-button
                                                 icon="el-icon-download"
                                                 size="mini"
                                                 type="primary"
                                                 plain
-                                                @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid" >下载作品</el-button>
+                                                @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid" >作品</el-button>
                                         <el-button
                                                 icon="el-icon-download"
                                                 size="mini"
                                                 type="primary"
                                                 plain
-                                                @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid" >下载源代码</el-button>
+                                                @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid" >源代码</el-button>
                                         <el-button
                                                 icon="el-icon-trophy"
                                                 size="mini"
                                                 type="success"
-                                                @click="Recommend(scope.$index, scope.row)" v-if="scope.row.rec==false" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid">推荐</el-button>
+                                                @click="Recommend(scope.$index, scope.row,true)"  :disabled="!scope.row.status||scope.row.uid!==scope.row.gid">推荐当前版本</el-button>
                                         <el-button
                                                 icon="el-icon-close"
                                                 size="mini"
                                                 type="danger"
-                                                @click="Recommend(scope.$index, scope.row)" v-if="scope.row.rec==true" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid">取消推荐</el-button>
+                                                @click="Recommend(scope.$index, scope.row,false)"  :disabled="!scope.row.status||scope.row.uid!==scope.row.gid||scope.row.rec_time===''">取消推荐</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="操作" width="220">
+                                <el-table-column label="操作" width="400">
                                     <template slot-scope="scope">
                                         <el-button
                                                 icon="el-icon-view"
                                                 size="mini"
                                                 type="info"
-                                                @click="View(scope.$index, scope.row.showid)"  :disabled="scope.row.uid!==scope.row.gid">预览</el-button>
+                                                @click="View(scope.$index, scope.row.showid,3)"  :disabled="scope.row.uid!==scope.row.gid">预览最新提交</el-button>
+                                        <el-button
+                                                icon="el-icon-view"
+                                                size="mini"
+                                                type="info"
+                                                @click="View(scope.$index, scope.row.showid,1)"  :disabled="scope.row.uid!==scope.row.gid">预览推荐版本</el-button>
                                         <el-button
                                             icon="el-icon-edit"
                                             size="mini"
@@ -278,7 +294,8 @@
                                 </el-table-column>
 
                                 <el-table-column
-                                        align="right">
+                                        align="right"
+                                        width="200">
                                     <template slot="header" slot-scope="scope">
                                         <el-input
                                                 v-model="search"
@@ -452,35 +469,34 @@
               else
                   console.log(res)
             },
-            async Recommend(index, item){
+            async Recommend(index, item,rec){
                 let data={
                     account:item.uid,
-                    rec:!item.rec,
+                    rec:rec,
                 }
                 const res= await setRecommend(data,this.id)
                 if(res.code == 200)
                 {
-                    if(this.students[index].rec==false) {
+                    if(rec===true) {
                         this.$message({
-                            message: '推荐成功',
+                            message: '设置成功',
                             type: 'success'
                         });
-                        this.students[index].rec=true
                     }
                     else{
                         this.$message({
                             message: '取消推荐成功',
                             type: 'success'
                         });
-                        this.students[index].rec=false
                     }
                 }
                 else
                     console.log(res)
+                this.load(this.id)
             },
             //教师预览模式
-            View(index,showid){
-                this.$router.push({name: 'projectDetail', params: {url: showid,mode:3}})
+            View(index,showid,mode){
+                this.$router.push({name: 'projectDetail', params: {url: showid,mode:mode}})
             },
             Preview(){
                 let data={...this.projectForm}
@@ -554,6 +570,7 @@
                         this.count = data.length
                         this.students=res2.data
                         console.log(this.students)
+                        this.submitCount=0
                         this.students.forEach(item =>{
                            item.name=item.groups.find( x => x.account===item.uid).name
                             if(item.status==true)
@@ -601,6 +618,7 @@
                         else
                             console.log(res)
                         this.editTaskFormVisible= false
+                        this.load()
                     }else{
                         console.log('error submit!!');
                         return false;
