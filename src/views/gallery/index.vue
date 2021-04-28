@@ -18,7 +18,7 @@
                     <h2 id="lessonTag">课程</h2>
                 </div></el-col>
             </el-row>
-            <el-row :gutter="24" type="flex" justify="space-around">
+            <el-row :gutter="24" type="flex" justify="space-around" v-loading="loading">
                 <el-col :span="6" v-for="(o, index) in lesson" :key="o.name" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                 <el-image :src="o.src" style="height: 300px"/>
@@ -40,12 +40,12 @@
                     <h2 id="projectTag">优秀作品</h2>
                 </div></el-col>
             </el-row>
-            <el-row type="flex" justify="center">
+            <el-row type="flex" justify="center" v-loading="loading">
                 <el-col :span="17"><div class="content-style">
                     <el-row :gutter="24" >
                         <el-col :span="8" v-for="(o, index) in projects" :key="o" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <router-link :to="'/gallery/detail/'+o.url">
+                                <router-link :to="'/gallery/detail/1/'+o.url">
                                     <el-image :src="o.src" style="height: 200px"/>
                                 </router-link>
 
@@ -56,6 +56,9 @@
                                     </div>
                                     <div class="bottom clearfix">
                                         <span class="intro">{{ o.info }}</span>
+                                    </div>
+                                    <div class="bottom clearfix right">
+                                        <span class="intro">指导：{{ o.teacher }}</span>
                                     </div>
                                 </div>
                             </el-card>
@@ -121,6 +124,7 @@
         name: "index",
         data(){
             return{
+                loading:true,
                 tags:{
                     items:[
                     {
@@ -184,6 +188,7 @@
 
               }else
                   console.log(res)
+              this.loading=false
           },
             handleSelect(tag){
                 document.querySelector("#"+tag).scrollIntoView(true);
@@ -200,6 +205,9 @@
 </script>
 
 <style scoped>
+    .right{
+        float:right;
+    }
     .title-style{
         text-align: center;
         border-bottom:1px solid #DCDFE6;

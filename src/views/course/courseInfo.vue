@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-loading="loading">
         <div class="course-title">
             <h1>课程名：{{name}}</h1>
             <span style="color: #515a6e">学期：{{this.term}}</span>
@@ -11,7 +11,8 @@
                         <div slot="header" class="clearfix">
                             <i class="el-icon-user-solid" style="padding-right: 5px"></i>
                             <span class="title-span">学生管理</span>
-                            <el-button type="primary" style="float: right; " @click="addStudentFormVisible = true" size="mini" icon="el-icon-plus">导入学生</el-button>
+                            <el-button type="primary" style="float: right;  margin-left: 20px" @click="addStudentFormVisible = true" size="mini" icon="el-icon-plus">导入学生</el-button>
+                            <el-button type="danger" style="float: right; " @click="ClearStudent" size="mini" icon="el-icon-minus">清空学生</el-button>
                         </div>
                         <div>
                             <el-table
@@ -88,6 +89,7 @@
 <script>
     import {getCourse,addStudent,studentList, delStudent} from '@/api/course'
     import taskfilter from "@/views/task/filter";
+    import {clearStudent} from "../../api/course";
     export default {
         name: "courseInfo",
         components: {taskfilter},
@@ -105,12 +107,7 @@
                 courses:[],
                 notice:"",
                 loading: true,
-                students: [{
-                    name: '王小虎',
-                    id:'16721073',
-                    class:'172115',
-                    department:'软件学院',
-                }],
+                students: [],
                 search: '',
                 addStudentFormVisible:false,
                 form: {
@@ -157,6 +154,19 @@
                     this.students=res2.data
                 } else
                     console.log(res2)
+                this.loading=false
+            },
+            async ClearStudent(){
+                const res=await clearStudent(this.cid)
+                if(res.code==200){
+                    this.$message({
+                            message:'清空成功',
+                        type: 'success'
+                    });
+                    this.getCourseInfo()
+
+                }
+                else console.log(res)
             },
             async submitAddStudentForm(){
                 let studentsID={
@@ -169,6 +179,7 @@
                         message:'添加学生成功',
                         type: 'success'
                     });
+                    this.getCourseInfo()
                 }
                 else
                     console.log(res)
@@ -181,6 +192,7 @@
         created() {
             this.cid=this.$route.params.id
             this.getCourseInfo()
+
         }
     }
 </script>

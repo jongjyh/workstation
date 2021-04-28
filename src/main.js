@@ -16,7 +16,11 @@ Vue.use(VMdEditor);
 //elementui
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-
+Vue.directive('title', {
+  inserted: function () {
+    document.title = '优秀作品展示系统'
+  }
+})
 import global_ from './Base.vue'
 Vue.prototype.GLOBAL = global_;
 

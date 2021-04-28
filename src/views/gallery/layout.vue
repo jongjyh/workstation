@@ -18,6 +18,7 @@
     <el-main class="main-style">
         <router-view @postChildInfo="getNavItem"></router-view>
     </el-main>
+        <el-footer style="text-align: center;background-color: #F6F6F6; height: 100px"><div style="font-size: 13px;padding: 10px;color: #909399">Copyright©2002-2020 School of Software,BUAA. All Right Reserved. 京ICP备05004617号-5</div></el-footer>
     </el-container>
 </template>
 

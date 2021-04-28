@@ -28,7 +28,7 @@ export const constantRoutes = [
         name: '展示首页',
         meta: {
           title:'选择课程',
-          role: ['teacher','student'],
+          role: ['teacher','student','admin'],
           icon: "el-icon-success"
         },
       },
@@ -47,8 +47,8 @@ export const constantRoutes = [
         }
       },
       {
-        path: '/gallery/detail/:url',
-        name: 'detail',
+        path: '/gallery/detail/:mode/:url?/:data?',
+        name: 'projectDetail',
         hidden:true,
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -124,7 +124,7 @@ export const asyncRoutes = [
     name: '课程管理',
     meta: {
       title:'课程管理',
-      role: ['teacher'],
+      role: ['teacher','admin'],
       icon: "el-icon-setting"
     }, //页面需要的权限
     children: [{
@@ -133,7 +133,7 @@ export const asyncRoutes = [
         name: '选择课程',
         meta: {
           title:'选择课程',
-          role: ['teacher'],
+          role: ['teacher','admin'],
           icon: "el-icon-success"
         },
        },
@@ -172,7 +172,7 @@ export const asyncRoutes = [
      //页面需要的权限
       meta: {
           title:'实验管理',
-          role: ['teacher','student'],
+          role: ['teacher','student','admin'],
           icon: "el-icon-s-order"
       },
     children: [
@@ -182,7 +182,7 @@ export const asyncRoutes = [
         name: 'filter',
         meta: {
           title:'选择实验',
-          role: ['student','teacher'],//记得删除教师
+          role: ['student','teacher','admin'],//记得删除教师
           icon: "el-icon-monitor"
         }
       },{
@@ -191,45 +191,6 @@ export const asyncRoutes = [
             name: 'detail',
             hidden:true,
         },
-    ]
-  },
-    //管理员路由
-  {
-    path: '',
-    name: 'Teacher',
-    component: layout,
-    meta:{
-      role: ['admin'],
-    },
-    children:[
-      {
-        path:"teacher",
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-        meta: {
-          title: '教师管理', //菜单名称
-          role: ['admin'], //当前菜单哪些角色可以看到
-          icon: 'el-icon-user'  //菜单左侧的icon图标
-        }
-      }
-    ]
-  },
-  {
-    path: '',
-    name: 'Term',
-    component: layout,
-    meta:{
-      role: ['admin'],
-    },
-    children:[
-      {
-        path:"term",
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-        meta: {
-          title: '学期管理', //菜单名称
-          role: ['admin'], //当前菜单哪些角色可以看到
-          icon: 'el-icon-s-tools'  //菜单左侧的icon图标
-        }
-      }
     ]
   },
     //

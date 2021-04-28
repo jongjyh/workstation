@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div >
         <el-card shadow="never">
             <div slot="header" class="clearfix">
                 <i class="el-icon-s-custom"></i>
@@ -47,7 +47,9 @@
                 <el-tag
                         :key="tag.account"
                         effect="light"
-                        v-for="tag in group"
+                        v-for="(tag,index) in group"
+                        :closable="leader && tag.account !== gid"
+                        @close="deleteMember(tag,index)"
                 >
                     {{tag.name}}
                 </el-tag>
@@ -82,7 +84,7 @@
 </template>
 
 <script>
-    import { teamInfo,leave} from '@/api/team'
+    import { teamInfo,leave,delMember} from '@/api/team'
     export default {
         name: "teamCard",
         methods:{
@@ -96,6 +98,16 @@
                 this.url=baseUrl+'/join/'+this.encode(this.eid,this.gid)
                 this.urlVisible=true
 
+            },
+            async deleteMember(item,index){
+                const res =await delMember(this.eid,this.gid,item.account)
+                if(res.code==200){
+                    this.$message({
+                        message: '踢人成功，请刷新',
+                        type: 'success'
+                    });
+                    this.group.splice(index,1)
+                }
             },
             async leaveTeam(){
                 const res=await leave({},this.eid,this.gid)

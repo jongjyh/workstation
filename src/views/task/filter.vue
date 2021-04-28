@@ -1,12 +1,12 @@
 <template>
-        <div class="inner_wrapper">
-            <div class="inner_title">未完成实验</div>
-            <el-dialog title="创建实验" :visible.sync="addTaskFormVisible"
+        <div class="inner_wrapper" v-loading="loading">
+            <div class="inner_title">未完成作业</div>
+            <el-dialog title="创建作业" :visible.sync="addTaskFormVisible"
                        width="35%"
                        center>
                 <el-form :model="form" :rules="rules" ref="form">
-                    <el-form-item label="实验名称" :label-width="formLabelWidth" prop="name">
-                        <el-input  placeholder="请输入实验名" v-model="form.name" autocomplete="off"></el-input>
+                    <el-form-item label="作业名称" :label-width="formLabelWidth" prop="name">
+                        <el-input  placeholder="请输入作业名" v-model="form.name" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="老师名称" :label-width="formLabelWidth">
                     <el-input
@@ -27,26 +27,10 @@
                             <el-radio :label=false>否</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="开始时间" :label-width="formLabelWidth"  prop="startTime">
-                        <el-date-picker
-                                v-model="form.startTime"
-                                type="datetime"
-                                placeholder="选择开始时间"
-                                value-format="yyyy-MM-dd HH:mm:ss">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="结束时间" :label-width="formLabelWidth" prop="dueTime">
-                        <el-date-picker
-                                v-model="form.dueTime"
-                                type="datetime"
-                                placeholder="选择结束时间"
-                                value-format="yyyy-MM-dd HH:mm:ss">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="实验说明" :label-width="formLabelWidth" prop="intro">
+                    <el-form-item label="作业说明" :label-width="formLabelWidth" prop="intro">
                         <el-input type="textarea"
                                   :rows="9"
-                                  placeholder="请输入实验说明"
+                                  placeholder="请输入作业说明"
                                   v-model="form.intro" autocomplete="off"></el-input>
                     </el-form-item>
 
@@ -57,11 +41,11 @@
                 </div>
             </el-dialog>
             <el-row :gutter="20">
-                <el-col :span="1" ><el-button type="primary" plain v-if="this.role == 'teacher'" @click="addTaskFormVisible = true" icon="el-icon-plus">创建实验</el-button>
+                <el-col :span="1" ><el-button type="primary" plain v-if="this.role == 'teacher'" @click="addTaskFormVisible = true" icon="el-icon-plus">创建作业</el-button>
                 </el-col>
                 <el-col :span="5" :offset="15">
                     <el-input
-                        placeholder="请输入实验名称"
+                        placeholder="请输入作业名称"
                         prefix-icon="el-icon-search"
                         v-model="searchContent"
                         @change="searchTask">
@@ -87,32 +71,26 @@
                         </el-table-column>
                     <el-table-column
                             prop="name"
-                            label="实验名"
-                            width="180">
+                            label="作业名"
+                            width="300">
                     </el-table-column>
                     <el-table-column
                             prop="lesson"
                             label="所属课程"
-                            width="180"
+                            width="250"
                             sortable>
                     </el-table-column>
+                        <el-table-column
+                                prop="tname"
+                                label="所属学期"
+                                width="180"
+                                sortable>
+                        </el-table-column>
                     <el-table-column
                             prop="teacher_name"
                             label="教师"
                             sortable>
                     </el-table-column>
-                        <el-table-column
-                                prop="startTime"
-                                label="开始时间"
-                                width="180"
-                                sortable>
-                        </el-table-column>
-                        <el-table-column
-                                prop="dueTime"
-                                label="结束时间"
-                                width="180"
-                                sortable>
-                        </el-table-column>
                         <el-table-column
                                 prop="operation"
                                 label="提交状态"
@@ -160,6 +138,7 @@
             this.role = this.$store.getters['user/role']
             this.teacher = this.$store.getters['user/userInfo'].nickName
             this.loadTask()
+
         },
         props:{
             courseId:Number,
@@ -193,8 +172,6 @@
                 let data={
                     name:this.form.name,
                     info:this.form.intro,
-                    begin:this.form.startTime,
-                    end:this.form.dueTime,
                     team:this.form.team,
                     tid:this.form.term.tid,
                     cid:this.form.cid,
@@ -205,7 +182,7 @@
                         if(res.code == 200)
                         {
                             this.$message({
-                                message:'创建实验成功',
+                                message:'创建作业成功',
                                 type: 'success'
                             });
                         }
@@ -222,7 +199,7 @@
 
             },
             async loadTask(){
-                //总实验列表
+                //总作业列表
                 if(typeof(this.courseId)==="undefined") {
                     const res = await tasks()
                     this.tableData=[]
@@ -230,9 +207,8 @@
                         let tasks = res.data;
                         if(tasks && tasks.length!==0) {
                             tasks.forEach(task => {
-                                task.startTime = task.begin;
-                                task.dueTime = task.end;
-                                task.lesson = task.cname;
+                                task.lesson
+                                    = task.cname;
                                 if(this.role=='student')
                                     task.operation =  (task.submit==true? '已提交':"未提交");
                                 else
@@ -255,7 +231,7 @@
                         }
                 }
 
-                //某个课程页下的实验列表
+                //某个课程页下的作业列表
                 else
                 {
                     const res = await courseTasks({},this.courseId)
@@ -263,8 +239,6 @@
                         let tasks = res.data;
                         if(tasks && tasks.length!==0)
                         tasks.forEach(task => {
-                            task.startTime = task.begin;
-                            task.dueTime = task.end;
                             task.lesson = task.cname;
                             task.operation = '-';
                             delete task.begin;
@@ -283,8 +257,7 @@
                     }
                 }
                 this.total=this.tableData.length
-
-
+                this.loading=false
             },
             compareDate(start,due)
             {
@@ -308,33 +281,8 @@
             }
         },
         data() {
-            var checkDate  = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请选择开始日期'));
-                }
-                else {
-                    if (this.form.dueTime !== '') {
-                        this.$refs.form.validateField('dueTime');
-                    }
-                    callback();
-                }
-            }
-            var checkDate2  = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请选择结束日期'));
-                }else if(!this.form.startTime) {
-                    callback(new Error('请先选择开始日期'));
-                }
-                else if (this.compareDate(this.form.startTime,this.form.dueTime)) {
-                    callback(new Error('结束日期必须晚于开始日期'));
-                }
-                else if (this.compareDate2(this.form.dueTime)) {
-                    callback(new Error('结束日期必须晚于当前时间'));
-                }else {
-                    callback();
-                }
-            }
             return {
+                loading:true,
                 role:'teacher',
                 teacher:'',
                 addTaskFormVisible:false,
@@ -347,8 +295,6 @@
                     name:'',
                     intro:'',
                     term:{},
-                    startTime:'',
-                    dueTime:'',
                     submitTime:'',
                     cid:'',
                     team:false
@@ -361,19 +307,10 @@
                         { required: true, message: '请选择课程', trigger: 'blur' },
                     ],
                     name:[
-                        { required: true, message: '请输入实验名称', trigger: 'blur' },
+                        { required: true, message: '请输入作业名称', trigger: 'blur' },
                     ],
                     intro:[
-                        { required: true, message: '请输入实验简介', trigger: 'blur' },
-                    ],
-                    startTime:[
-                        { required: true,trigger: 'blur' },
-                        { validator:checkDate, trigger: 'blur' },
-                    ],
-                    dueTime:[
-                        { required: true,trigger: 'blur' },
-                        { validator:checkDate2, trigger: 'blur' },
-
+                        { required: true, message: '请输入作业简介', trigger: 'blur' },
                     ],
                 },
             }

@@ -3,7 +3,7 @@
         <div class="title">
             <h2>我的课程</h2>
         </div>
-        <div class="container-wrapper">
+        <div class="container-wrapper" v-loading="loading">
             <!--顶部div-->
             <el-row class="select-term-wrapper" type="flex" justify="space-between">
                 <el-col :span=7>
@@ -88,6 +88,7 @@
         name: "courses",
         data(){
             return{
+                loading:true,
                 chooseterm:'',
                 term:[],
                 lesson:[],
@@ -181,12 +182,14 @@
                 }
                 else
                     console.log(res)
+                this.loading=false
             },
         },
         created(){
             this.teacher=store.getters['user/userInfo'].nickName
             this.loadTerm()
             this.loadCourses()
+
         },
         mounted() {
 

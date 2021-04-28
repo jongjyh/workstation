@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-loading="loading">
         <div class="content-style">
             <div class="introduce">
                 <el-row :gutter="30">
@@ -40,12 +40,13 @@
 </template>
 
 <script>
-    import {readme} from '@/api/HomePage'
+    import {readme,tecPreview} from '@/api/HomePage'
     import global from '@/Base.vue'
     export default {
         name: "detail",
         data(){
             return{
+                loading:true,
                 tags:{
                     items:[],
                     name:"",
@@ -55,34 +56,57 @@
                 markdown:"",
                 src:'',
                 basic:{},
-                activeNames:["1","2","3","4"]
+                activeNames:["1","2","3","4"],
+
             }
         },
         props:{
           thumb:String,
         },
         created() {
-            this.url=this.$route.params.url
-            this.loadMarkDown()
+            let mode=this.$route.params.mode
+
+            //mode=0 学生预览模式 mode=1 载入模式 mode=3教师预览模式
+            if(mode==1)
+            {
+                this.url=this.$route.params.url
+                this.loadMarkDown(readme)
+            }
+            else if(mode==0){
+                let data = decodeURIComponent(this.$route.params.data);
+                data=JSON.parse(data)
+                this.loadData(data)
+            }
+            //预览模式
+            else if(mode==3){
+                this.url=this.$route.params.url
+                this.loadMarkDown(tecPreview)
+            }
             this.$emit('postChildInfo',this.tags)
+
         },
         methods:{
             goBack(){
                 window.history.back();
             },
-            async loadMarkDown(){
-                const res=await readme(this.url);
+            loadData(data){
+                this.basic=data
+                this.basic.showURL=global.BACKEND_URL+"/"+this.basic.url
+                this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
+                this.tags.name=this.basic.name
+                this.markdown=data.readme
+                console.log(data)
+                this.loading=false
+            },
+            async loadMarkDown(api){
+                console.log(api)
+                const res=await api(this.url);
                 if(res.code==200){
-                    this.basic=res.data
-                    this.basic.showURL=global.BACKEND_URL+"/"+this.basic.url
-                    this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
-                    this.tags.name=this.basic.name
-                    console.log(this.src)
-                    this.markdown=res.data.readme
-                    console.log(res.data)
+                    this.loadData(res.data)
                 }
                 else
                     console.log(res)
+
             }
         }
     }

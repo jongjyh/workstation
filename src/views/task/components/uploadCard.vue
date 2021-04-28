@@ -5,7 +5,8 @@
             width="30%"
             center
             append-to-body
-            :show-close='false'>
+            :show-close='false'
+            :close-on-click-modal="false">
         <div class="center-style">
             <div class="center-style"><span >请上传你的{{acceptType}}文件，并把获得的外链填入上传链接</span></div>
             <el-upload
@@ -90,8 +91,7 @@
         },
         props:['uploadVisible','type'],
         created() {
-            console.log(this.type)
-            if(this.type===1)
+            if(this.type==1)
             {
                 this.uploadFunction=this.UploadImg
                 this.acceptType='.jpg'

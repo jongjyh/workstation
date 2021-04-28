@@ -1,6 +1,6 @@
 <template>
     <div class="outter_wrapper">
-        <div class="title">实验信息</div>
+        <div class="title">作业信息</div>
         <taskfilter></taskfilter>
     </div>
 </template>

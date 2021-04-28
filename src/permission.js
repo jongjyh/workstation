@@ -7,7 +7,6 @@ function getToken() {
     return Cookies.get('Token')
 }
  router.beforeEach(async (to, from, next) => {
-     console.log(to.path)
     if (getToken()) { // 判断是否有token
         if (store.getters['user/role'].length === 0) { // 判断当前用户是否已拉取完user_info信息
             const user=await store.dispatch('user/GetInfo')// 拉取info

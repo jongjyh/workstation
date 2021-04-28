@@ -20,3 +20,12 @@ export const getCommit = (data,eid) => {
         data: data
     })
 }
+export const tecGetCommit = (eid,id)=>{
+    return service({
+        url: "/exp/"+eid+'/stat',
+        method: 'post',
+        data: {
+            account:id
+        }
+    })
+}

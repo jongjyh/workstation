@@ -42,6 +42,12 @@ export const addStudent = (data,cid) => {
         data: data
     })
 }
+export const clearStudent = (cid) => {
+    return service({
+        url: "/course/"+cid+'/students',
+        method: 'delete',
+    })
+}
 export const delStudent = (data,cid,sid) => {
     return service({
         url: "/course/"+cid+'/student/'+sid,

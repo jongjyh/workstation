@@ -74,6 +74,7 @@
 
 <script>
     import { mapActions } from "vuex";
+    import {captcha} from '@/api/user'
     export default {
         name: "Login",
         data() {
@@ -100,6 +101,7 @@
                     password: "",
                     captcha: "",
                     captchaId: "",
+                    picPath:""
                 },
                 rules: {
                     account: [{ validator: checkUsername, trigger: "blur" }],
@@ -115,10 +117,12 @@
                 this.logByCloudSoft(this.$route.query.authorization)
             }
             this.curYear = new Date().getFullYear();
+            this.loginVefify()
         },
         methods: {
             ...mapActions("user", ["LoginIn"]),
             async login() {
+                this.loginForm.picPath=this.picPath
                 return await this.LoginIn(this.loginForm);
             },
             async submitForm() {
@@ -153,10 +157,10 @@
                 this.lock === "lock" ? (this.lock = "unlock") : (this.lock = "lock");
             },
             loginVefify() {
-                /*captcha({}).then((ele) => {
+                captcha({}).then((ele) => {
                     this.picPath = ele.data.picPath;
                     this.loginForm.captchaId = ele.data.captchaId;
-                });*/
+                });
             },
         },
 

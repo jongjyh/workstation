@@ -28,3 +28,10 @@ export const readme = (showid) => {
         method: 'get',
     })
 }
+
+export const tecPreview = (showid) => {
+    return service({
+        url: "/show/preview/readme/"+showid,
+        method: 'get',
+    })
+}

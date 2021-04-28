@@ -6,17 +6,32 @@ export const teamInfo = (data,eid) => {
         data: data
     })
 }
+export const delMember = (eid,gid,uid) => {
+    return service({
+        url: "/exp/"+eid+"/team",
+        method: 'delete',
+        data: {
+            gid:gid,
+            account:uid
+        }
+    })
+}
 export const join = (data,eid,gid) => {
     return service({
-        url: "/exp/"+eid+"/team/"+gid,
-        method: 'get',
-        data: data
+        url: "/exp/"+eid+"/team",
+        method: 'post',
+        data: {
+            gid:gid
+        }
     })
 }
 export const leave = (data,eid,gid) => {
     return service({
-        url: "/exp/"+eid+"/team/"+gid,
+        url: "/exp/"+eid+"/team",
         method: 'delete',
-        data: data
+        data: {
+            gid:gid,
+            account:''
+        }
     })
 }

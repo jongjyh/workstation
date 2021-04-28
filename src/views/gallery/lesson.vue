@@ -1,5 +1,5 @@
 <template>
-            <div>
+            <div >
             <div class="screen-style">
                 <el-image
                         style="width: 1200px; height: 600px"
@@ -15,7 +15,7 @@
             </el-row>
             <!--目录-->
             <div class="category">
-            <el-row type="flex" justify="center">
+            <el-row type="flex" justify="center" v-loading="loading">
                 <el-col :span="14">
                     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelectYear">
                         <el-menu-item index="0">全部年度</el-menu-item>
@@ -39,8 +39,12 @@
                                     <div style="text-align: center;font-weight: bolder;margin-top: 10px;margin-bottom: 5px" >{{o.title}}</div>
                                     <span style="color: #999999; font-size: 13px">作者：</span>
                                     <span style=" font-size: 13px ">{{o.uname}}</span>
+                                    <div>
+                                        <span style="color: #999999; font-size: 13px">指导：</span>
+                                        <span style=" font-size: 13px ">{{o.teacher}}</span>
+                                    </div>
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/detail/'+o.url" >
+                                        <router-link :to="'/gallery/detail/1/'+o.url" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -101,6 +105,7 @@
         name: "project",
         data(){
             return{
+                loading:true,
                 tags:{
                     items:[
                     {
@@ -172,6 +177,7 @@
                 }
                 else
                     console.log(res)
+                this.loading=false
             },
             handleSelectYear(key, keyPath){
                 this.loadProject(key,1,this.pageSize)

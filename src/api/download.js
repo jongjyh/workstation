@@ -26,10 +26,10 @@ export const dwAll = (data,eid) => {
     })
 }
 //设置是否推荐，每次取反-TEACHER
-export const setRecommend = (data,eid,stuid) => {
+export const setRecommend = (data,eid) => {
     return service({
-        url: "/exp/"+eid+'/rec/'+stuid,
-        method: 'get',
+        url: "/exp/"+eid+'/rec',
+        method: 'post',
         data: data
     })
 }

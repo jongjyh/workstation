@@ -6,6 +6,13 @@ export const loginByAuth = (auth) => {
         data:auth
     })
 }
+
+export const captcha = () => {
+    return service({
+        url: "/user/captcha",
+        method: 'get',
+    })
+}
 export const login = (data) => {
     return service({
         url: "/user/login",

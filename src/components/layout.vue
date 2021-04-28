@@ -1,32 +1,50 @@
 <template>
     <el-container style="height: 100%; border: 1px solid #eee">
-        <el-aside  class="aside-wrapper" width="250px" >
-            <div class="aside-title" >
-                <div class="aside-title-icon">
-                    <el-image :src="logoimg" style="width: 100px"/>
-<!--                    <el-avatar :size="90" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" ></el-avatar>-->
+            <el-menu :default-active="$route.path" :collapse="isCollapse" >
+                <div class="aside-title"  >
+                    <div class="aside-title-icon">
+                        <el-image :src="logoimg" style="width: 100px"/>
+                    </div>
+                    <h1 class="icon-title" v-show="!isCollapse">优秀作品展示系统</h1>
+                    <div v-show="isCollapse" class="aside-title-icon">
                 </div>
-
-                <h1 class="icon-title">优秀作品展示系统</h1>
-            </div>
-            <el-menu :default-active="$route.path">
-                <side-menus :routes="getRoute"></side-menus>
+                </div>
+                <router-link to="/" :key="0">
+                <el-menu-item index="0" >
+                    <i class="el-icon-trophy"></i>
+                    <span slot="title">作品展示</span>
+                </el-menu-item>
+                </router-link>
+                <router-link to="/courses/course" :key="1">
+                <el-menu-item index="/courses/course" v-if="this.role==='teacher'">
+                    <i class="el-icon-menu"></i>
+                    <span slot="title">课程管理</span>
+                </el-menu-item>
+                </router-link>
+                <router-link to="/task/filter">
+                <el-menu-item index="/task/filter" v-if="this.role==='student'">
+                    <i class="el-icon-s-order"></i>
+                    <span slot="title">作业管理</span>
+                </el-menu-item>
+                </router-link>
             </el-menu>
 
-
-        </el-aside>
-
         <el-container>
-            <el-header style="text-align: right; font-size: 12px">
+            <el-header style="">
+                <div style="float: left">
+                    <i class="el-icon-s-fold"   @click="isCollapse=true" v-show="isCollapse===false"></i>
+                    <i class="el-icon-s-unfold" @click="isCollapse=false"  v-show="isCollapse===true"></i>
+                </div>
+                <div style="text-align: right; font-size: 12px">
                 <el-dropdown @command="handleCommand">
-                    <i class="el-icon-setting" style="margin-right: 15px "></i>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon="el-icon-user" command="personInfoOpen">个人信息</el-dropdown-item>
-
                         <el-dropdown-item icon="el-icon-close" command="logOut">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <span>{{this.name}}</span>
+                </div>
             </el-header>
             <el-dialog title="个人信息" :visible.sync="personInfoVisible" width="30%" :show-close='false' :before-close="handleClose">
                 <div class="person-icon">
@@ -80,6 +98,12 @@
     </el-container>
 </template>
 <style>
+    a{
+        text-decoration: none;
+    }
+    .router-link-active {
+        text-decoration: none;
+    }
     .el-header {
         background-color: #99CCCC;
         color: #333;
@@ -113,6 +137,9 @@
     .right-user-icon{
         overflow: visible;
     }
+    .aside-title{
+        padding: 20px;
+    }
 </style>
 <script>
     import sideMenus from '@/components/sideMenus'
@@ -143,6 +170,7 @@
                 }
             };
             return{
+                isCollapse:true,
                 logoimg:require('@/assets/layout-logo.png'),
                 innerVisible:false,
                 name:'',
