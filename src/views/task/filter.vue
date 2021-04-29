@@ -81,7 +81,7 @@
                             sortable>
                     </el-table-column>
                         <el-table-column
-                                prop="tname"
+                                prop="term_name"
                                 label="所属学期"
                                 width="180"
                                 sortable>
