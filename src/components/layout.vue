@@ -1,12 +1,11 @@
 <template>
     <el-container style="height: 100%; border: 1px solid #eee">
-            <el-menu :default-active="$route.path" :collapse="isCollapse"  router="true" class="el-menu-vertical-demo">
+            <el-menu :default-active="$route.path" :collapse="isCollapse"  router="true" class="el-menu-vertical-demo" >
                 <div class="aside-title"  >
                     <div class="aside-title-icon">
                         <el-image :src="logoimg" style="width: 100px"/>
-
                     </div>
-                    <h1 class="icon-title" v-show="!isCollapse">优秀作品展示系统</h1>
+                    <h1 v-if="!isSlide">优秀作品管理系统</h1>
                 </div>
                 <el-menu-item index="/" >
                     <i class="el-icon-trophy"></i>
@@ -25,8 +24,8 @@
         <el-container>
             <el-header style="">
                 <div style="float: left">
-                    <i class="el-icon-s-fold"   @click="isCollapse=true" v-show="isCollapse===false"></i>
-                    <i class="el-icon-s-unfold" @click="isCollapse=false"  v-show="isCollapse===true"></i>
+                    <i class="el-icon-s-fold"   @click="Close" v-show="isCollapse===false"></i>
+                    <i class="el-icon-s-unfold" @click="Open"  v-show="isCollapse===true"></i>
                 </div>
                 <div style="text-align: right; font-size: 12px">
                 <el-dropdown @command="handleCommand">
@@ -91,9 +90,21 @@
     </el-container>
 </template>
 <style>
+    .el-menu--collapse  .aside-title h2{
+        display: none;
+    }
+    .el-menu--collapse  .el-submenu__title span{
+        display: none;
+    }
+    /*隐藏 > */
+    .el-menu--collapse  .el-submenu__title .el-submenu__icon-arrow{
+        display: none;
+    }
+
     .el-menu-vertical-demo:not(.el-menu--collapse) {
         width: 250px;
         min-height: 400px;
+
     }
     a{
         text-decoration: none;
@@ -167,7 +178,8 @@
                 }
             };
             return{
-                isCollapse:true,
+                isSlide:false,
+                isCollapse:false,
                 logoimg:require('@/assets/layout-logo.png'),
                 innerVisible:false,
                 name:'',
@@ -215,6 +227,20 @@
             }
         },
         methods:{
+            Open(){
+              this.isCollapse=false
+              this.isSlide=false;
+            },
+            async Close(){
+              this.isSlide=true;
+              await this.pause()
+                this.isCollapse=true
+            },
+            pause(){
+              return new Promise(function(resolve,reject){
+                  setTimeout(resolve,1);
+              })
+            },
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {

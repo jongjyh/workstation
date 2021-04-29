@@ -17,7 +17,7 @@ Vue.use(VMdEditor);
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.directive('title', {
-  inserted: function () {
+  inserted: function (el) {
     document.title = '优秀作品展示系统'
   }
 })
@@ -26,6 +26,9 @@ Vue.prototype.GLOBAL = global_;
 
 import Bus from '@/utils/bus.js'
 Vue.use(Bus)
+
+import VueWechatTitle from 'vue-wechat-title'
+Vue.use(VueWechatTitle)
 
 import permission from '@/permission.js'
 

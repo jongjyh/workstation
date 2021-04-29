@@ -122,7 +122,7 @@
         methods: {
             ...mapActions("user", ["LoginIn"]),
             async login() {
-                this.loginForm.picPath=this.picPath
+                this.loginForm.picPath=this.loginForm.captcha
                 return await this.LoginIn(this.loginForm);
             },
             async submitForm() {

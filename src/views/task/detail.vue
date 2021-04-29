@@ -177,7 +177,16 @@
             <el-col :span="24"><div class="grid-content bg-purple-light task-detail">
                 <el-card class="box-card" shadow="never" >
                     <div slot="header" class="clearfix">
-                        <span style="font-weight: bolder;">学生管理</span>
+                        <i class="el-icon-user-solid"></i>
+                        <span style="font-weight: bolder; margin-left: 10px;">学生管理</span>
+                                <el-input
+                                        v-model="search"
+                                        size="mini"
+                                        placeholder="请输入学号"
+                                        class="search_input"
+
+                                />
+
                     </div>
                     <div>
                         <template>
@@ -227,16 +236,6 @@
                                         </div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column
-                                        label="状态"
-                                        width="70">
-                                    <template slot-scope="scope">
-                                            <div slot="reference" class="name-wrapper">
-                                                <el-tag size="medium" type="success" v-if="scope.row.status==true">已提交</el-tag>
-                                                <el-tag size="medium" type="danger" v-else-if="scope.row.status==false">未提交</el-tag>
-                                            </div>
-                                    </template>
-                                </el-table-column>
                                 <el-table-column v-if="basicForm.team"
                                         label="队长"
                                         width="110">
@@ -247,7 +246,7 @@
                                         </div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="操作" width="500">
+                                <el-table-column label="下载" width="200">
                                     <template slot-scope="scope">
                                         <el-button
                                                 icon="el-icon-download"
@@ -261,48 +260,45 @@
                                                 type="primary"
                                                 plain
                                                 @click="dwone(scope.$index, scope.row)" :disabled="!scope.row.status||scope.row.uid!==scope.row.gid" >源代码</el-button>
-                                        <el-button
-                                                icon="el-icon-trophy"
-                                                size="mini"
-                                                type="success"
-                                                @click="Recommend(scope.$index, scope.row,true)"  :disabled="!scope.row.status||scope.row.uid!==scope.row.gid">推荐当前版本</el-button>
-                                        <el-button
-                                                icon="el-icon-close"
-                                                size="mini"
-                                                type="danger"
-                                                @click="Recommend(scope.$index, scope.row,false)"  :disabled="!scope.row.status||scope.row.uid!==scope.row.gid||scope.row.rec_time===''">取消推荐</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="操作" width="400">
+                                <el-table-column label="操作" width="360">
                                     <template slot-scope="scope">
                                         <el-button
                                                 icon="el-icon-view"
                                                 size="mini"
                                                 type="info"
                                                 @click="View(scope.$index, scope.row.showid,3)"  :disabled="scope.row.uid!==scope.row.gid">预览最新提交</el-button>
+
+                                        <el-button
+                                                icon="el-icon-trophy"
+                                                size="mini"
+                                                type="success"
+                                                @click="Recommend(scope.$index, scope.row,true)"  :disabled="!scope.row.status||scope.row.uid!==scope.row.gid">推荐当前版本</el-button>
+                                        <el-button
+                                                icon="el-icon-edit"
+                                                size="mini"
+                                                type="primary"
+                                                @click="edit(scope.$index, scope.row.uid)"  :disabled="scope.row.uid!==scope.row.gid">编辑</el-button>
+
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="260">
+                                    <template slot-scope="scope">
                                         <el-button
                                                 icon="el-icon-view"
                                                 size="mini"
                                                 type="info"
                                                 @click="View(scope.$index, scope.row.showid,1)"  :disabled="scope.row.uid!==scope.row.gid">预览推荐版本</el-button>
                                         <el-button
-                                            icon="el-icon-edit"
-                                            size="mini"
-                                            type="primary"
-                                            @click="edit(scope.$index, scope.row.uid)"  :disabled="scope.row.uid!==scope.row.gid">编辑</el-button>
+                                                icon="el-icon-close"
+                                                size="mini"
+                                                type="danger"
+                                                @click="Recommend(scope.$index, scope.row,false)"  :disabled="!scope.row.status||scope.row.uid!==scope.row.gid||scope.row.rec_time===''">取消推荐</el-button>
+
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column
-                                        align="right"
-                                        width="200">
-                                    <template slot="header" slot-scope="scope">
-                                        <el-input
-                                                v-model="search"
-                                                size="mini"
-                                                placeholder="请输入学号"/>
-                                    </template>
-                                </el-table-column>
                             </el-table>
                         </template>
                     </div>
@@ -700,8 +696,17 @@
         }
     }
 </script>
-
+<style>
+    .search_input{
+        display: inline;
+    }
+    .search_input .el-input__inner{
+        width:150px;
+        margin-left:10px
+    }
+</style>
 <style scoped>
+
     .center-style{
         text-align: center;
     }

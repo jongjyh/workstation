@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-wechat-title="'优秀作品管理系统'">
     <router-view />
   </div>
 </template>
