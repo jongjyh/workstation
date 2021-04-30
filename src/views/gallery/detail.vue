@@ -23,7 +23,7 @@
                             <el-collapse-item title="项目简介 Info" name="3">
                                 <div>{{basic.info}}</div>
                             </el-collapse-item>
-                            <el-collapse-item title="展示链接 ShowURL" name="4">
+                            <el-collapse-item title="展示链接 ShowURL" name="4" v-if="mode!=0">
                                 <el-link :href="basic.showURL" target="_blank"  type="info">进入链接</el-link>
                             </el-collapse-item>
                         </el-collapse>
@@ -57,7 +57,7 @@
                 src:'',
                 basic:{},
                 activeNames:["1","2","3","4"],
-
+                mode:0,
             }
         },
         props:{
@@ -65,7 +65,7 @@
         },
         created() {
             let mode=this.$route.params.mode
-
+            this.mode=mode
             //mode=0 学生预览模式 mode=1 载入模式 mode=3教师预览模式
             if(mode==1)
             {
