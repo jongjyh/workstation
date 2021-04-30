@@ -91,7 +91,7 @@
             },
             loadData(data){
                 this.basic=data
-                this.basic.showURL=global.BACKEND_URL+"/"+this.basic.thumb
+                this.basic.showURL=global.BACKEND_URL+"/"+this.basic.url
                 if(this.basic.thumb==='null')
                 {
 

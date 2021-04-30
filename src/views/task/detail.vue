@@ -41,13 +41,13 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="外链" >
-                    <el-input  placeholder="点击上传作品按钮来获取链接" v-model="projectForm.src_url" autocomplete="off" v-if="projectForm.type!==3" :disabled="true"></el-input>
-                    <el-input  placeholder="请输入作品链接（请填写URL链接）" v-model="projectForm.src_url" autocomplete="off" v-else></el-input>
+                    <el-input  placeholder="点击上传作品按钮来获取链接" v-model="projectForm.dist_url" autocomplete="off" v-if="projectForm.type!==3" :disabled="true"></el-input>
+                    <el-input  placeholder="请输入作品链接（请填写URL链接）" v-model="projectForm.dist_url" autocomplete="off" v-else></el-input>
                     <el-link type="primary" v-if="projectForm.type!==3" @click="uploadSRCVisible=true">上传作品</el-link>
                     <upload-card :uploadVisible.sync="uploadSRCVisible" :type="2" @func="getfileURL"></upload-card>
                 </el-form-item>
                 <el-form-item label="源代码文件" >
-                    <el-input  placeholder="点击上传源代码按钮来获取链接" v-model="projectForm.dist_url" autocomplete="off"  :disabled="true"></el-input>
+                    <el-input  placeholder="点击上传源代码按钮来获取链接" v-model="projectForm.src_url" autocomplete="off"  :disabled="true"></el-input>
                     <el-link type="primary"  @click="uploadDISTVisible=true">上传源代码</el-link>
                     <upload-card :uploadVisible.sync="uploadDISTVisible" :type="2" @func="getcodeURL"></upload-card>
                 </el-form-item>
