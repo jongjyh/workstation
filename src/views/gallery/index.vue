@@ -3,7 +3,7 @@
             <div class="screen-style">
                 <template>
                     <el-carousel :interval="4000" type="card" height="400px">
-                        <el-carousel-item v-for="(item,index) in carousel" :key="index"><router-link :to="'/gallery/detail/1/'+item.url">
+                        <el-carousel-item v-for="(item,index) in carousel" :key="index"><router-link :to="'/gallery/detail/1/'+item.url"  target="_blank">
                             <el-image
                                     :src="item.src"
                                     fit="fill"
@@ -20,22 +20,25 @@
                     <h2 id="lessonTag">课程</h2>
                 </div></el-col>
             </el-row>
-            <el-row :gutter="24" type="flex" justify="space-around" v-loading="loading">
-                <el-col :span="6" v-for="(o, index) in lesson" :key="index" style="margin-bottom: 25px">
-                            <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <el-image :src="o.src" style="height: 300px"/>
+            <el-row :gutter="24" type="flex" justify="center" v-loading="loading" >
+                <el-col :span="20">
+                <div class="content-style">
+                    <el-row :gutter="24">
+                <el-col :span="8" v-for="(o, index) in lesson" :key="index" style="margin-bottom: 25px;">
+                            <el-card :body-style="{ padding: '0px'}" shadow="hover" style="width:400px">
+                                <el-image :src="o.src" style="width:400px;height: 216px" fit="fill" />
                                 <div style="padding: 14px;">
                                     <h3 style="text-align: center">{{o.name}}</h3>
-
                                     <div class="bottom clearfix">
                                         <router-link :to="'/gallery/lesson/'+o.id" >
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
-
                                     </div>
                                 </div>
                             </el-card>
-                        </el-col>
+                </el-col></el-row>
+                </div>
+                </el-col>
             </el-row>
             <el-row  >
                 <el-col :span="24"><div class="title-style">
@@ -43,11 +46,12 @@
                 </div></el-col>
             </el-row>
             <el-row type="flex" justify="center" v-loading="loading">
-                <el-col :span="17"><div class="content-style">
+                <el-col :span="17">
+                    <div class="content-style">
                     <el-row :gutter="24" >
                         <el-col :span="8" v-for="(o, index) in projects" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <router-link :to="'/gallery/detail/1/'+o.url">
+                                <router-link :to="'/gallery/detail/1/'+o.url"  target="_blank">
                                     <el-image :src="o.src" style="height: 200px"/>
                                 </router-link>
 

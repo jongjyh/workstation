@@ -17,8 +17,9 @@
     <!--内容-->
     <el-main class="main-style">
         <router-view @postChildInfo="getNavItem"></router-view>
+        <el-footer style="text-align: center;background-color: #F6F6F6; height: 100px;padding: 0px"><div style="font-size: 13px;padding: 10px;color: #909399">Copyright©2002-2021 School of Software,BUAA. All Right Reserved. 京ICP备05004617号-5</div></el-footer>
     </el-main>
-        <el-footer style="text-align: center;background-color: #F6F6F6; height: 100px"><div style="font-size: 13px;padding: 10px;color: #909399">Copyright©2002-2020 School of Software,BUAA. All Right Reserved. 京ICP备05004617号-5</div></el-footer>
+
     </el-container>
 </template>
 
@@ -27,12 +28,17 @@
         name: "layout",
         methods:{
             getNavItem(Items){
+                this.tags=[]
+
                 this.tags=Items
             },
             goBack(){
                 window.history.back();
             },
             handleSelect(tag){
+                if(tag==="0")
+                    this.$router.push('/')
+                else
                 document.querySelector("#"+tag).scrollIntoView(true);
             },
         },
@@ -47,6 +53,17 @@
 </script>
 
 <style scoped>
+    .el-main {
+        position: absolute;
+        left:0;
+        right: 0;
+        top: 60px;
+        bottom: 0;
+        overflow-y: scroll;
+        padding-bottom: 0px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
     .header-style{
         box-shadow: 0 0 4px #c7c7c7;
         background-color: #F6F6F6;

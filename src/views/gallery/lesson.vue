@@ -16,7 +16,7 @@
             <!--目录-->
             <div class="category">
             <el-row type="flex" justify="center" v-loading="loading">
-                <el-col :span="14">
+                <el-col span="14">
                     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelectYear">
                         <el-menu-item index="0">全部年度</el-menu-item>
                         <el-menu-item v-for="item in term" :index="item.tid+''" :key="item.tid+''">{{item.tname}}</el-menu-item>
@@ -27,11 +27,11 @@
             </div>
             <!--卡片-->
             <el-row type="flex" justify="center">
-                <el-col :span="20"><div class="content-style">
-                    <el-row :gutter="24" >
-                        <el-col :span="6" v-for="(o, index) in project" :key="index" style="margin-bottom: 25px">
+                <el-col span="20"><div class="content-style">
+                    <el-row gutter="24" >
+                        <el-col span="6" v-for="(o, index) in project" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
-                                <router-link :to="'/gallery/detail/1/'+o.url" >
+                                <router-link :to="'/gallery/detail/1/'+o.url"  target="_blank">
                                     <img :src="o.src" class="projectimage">
                                 </router-link>
 
@@ -44,7 +44,7 @@
                                         <span style=" font-size: 13px ">{{o.teacher}}</span>
                                     </div>
                                     <div class="bottom clearfix">
-                                        <router-link :to="'/gallery/detail/1/'+o.url" >
+                                        <router-link :to="'/gallery/detail/1/'+o.url"   target="_blank">
                                             <el-button type="text" class="button">进入主页</el-button>
                                         </router-link>
 
@@ -108,6 +108,10 @@
                 loading:true,
                 tags:{
                     items:[
+                        {
+                            label:'返回主页',
+                            index:'0'
+                        },
                     {
                         label:'优秀作品',
                         index:'projectTag'

@@ -48,7 +48,10 @@
             return{
                 loading:true,
                 tags:{
-                    items:[],
+                    items:[{
+                        label:'返回主页',
+                        index:'0'
+                    },],
                     name:"",
                     showNav:true,
                 },
@@ -91,10 +94,10 @@
             },
             loadData(data){
                 this.basic=data
+                console.log(data)
                 this.basic.showURL=global.BACKEND_URL+"/"+this.basic.url
                 if(this.basic.thumb==='null')
                 {
-
                     this.src=require('@/assets/project_stand.jpeg')
                 }else
                     this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
