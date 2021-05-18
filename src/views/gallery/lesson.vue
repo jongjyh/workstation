@@ -102,24 +102,6 @@
         data(){
             return{
                 loading:true,
-                tags:{
-                    items:[
-                        {
-                            label:'返回主页',
-                            index:'0'
-                        },
-                    {
-                        label:'优秀作品',
-                        index:'projectTag'
-                    },
-                    {
-                        label:'关于本课程',
-                        index:'aboutTag'
-                    },
-                    ],
-                    name:"",
-                    showNav:true,
-                },
                 courseInfo:'',
                 ImageSrc:'',
                 project:[],
@@ -136,7 +118,6 @@
             this.loadCourse()
             this.loadTerm()
             this.loadProject(0,1,this.pageSize)
-            this.$emit('postChildInfo',this.tags)
         },
         methods:{
             async loadCourse(){
@@ -144,14 +125,12 @@
                 if(res.code==200)
                 {
                     this.cname=res.data.name
-                    this.tags.name=res.data.name
                     this.courseInfo=res.data.info
                     console.log(res.data.thumb)
                     if(res.data.thumb==='')
                         this.ImageSrc=require('@/assets/course_bg.png')
                     else
                     this.ImageSrc=global.BACKEND_URL+'/img/'+res.data.thumb
-                    console.log(this.ImageSrc)
                 }
                 else
                     console.log(res)

@@ -5,7 +5,7 @@
             <el-image :src="logo" style="height: 40px;width: 150px"></el-image>
         </div>
         <div class="el-menu-style">
-            <el-menu :default-active="activeIndex" :router="true" mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
+            <el-menu :default-active="activeIndex" :router="true" mode="horizontal"  background-color="#F6F6F6" active-text-color="black">
                 <el-menu-item class="menu-item-style" index="/" :key="1">主页</el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">课程</template>
@@ -22,7 +22,7 @@
     </el-header>
     <!--内容-->
     <el-main class="main-style">
-        <router-view @postChildInfo="getNavItem"></router-view>
+        <router-view ></router-view>
         <el-footer style="text-align: center;background-color: #F6F6F6; height: 100px;padding: 0px"><div style="font-size: 13px;padding: 10px;color: #909399">Copyright©2002-2021 School of Software,BUAA. All Right Reserved.</div></el-footer>
     </el-main>
 

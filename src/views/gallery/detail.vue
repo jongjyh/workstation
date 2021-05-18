@@ -47,14 +47,6 @@
         data(){
             return{
                 loading:true,
-                tags:{
-                    items:[{
-                        label:'返回主页',
-                        index:'0'
-                    },],
-                    name:"",
-                    showNav:true,
-                },
                 url:"",
                 markdown:"",
                 src:'',
@@ -85,7 +77,6 @@
                 this.url=this.$route.params.url
                 this.loadMarkDown(tecPreview)
             }
-            this.$emit('postChildInfo',this.tags)
 
         },
         methods:{
@@ -101,7 +92,6 @@
                     this.src=require('@/assets/project_stand.jpeg')
                 }else
                     this.src=global.BACKEND_URL+'/img/'+this.basic.thumb
-                this.tags.name=this.basic.name
                 this.markdown=data.readme
                 console.log(data)
                 this.loading=false
