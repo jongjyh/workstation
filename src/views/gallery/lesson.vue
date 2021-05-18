@@ -1,12 +1,32 @@
 <template>
             <div >
-            <div class="screen-style">
-                <el-image
-                        style="width: 1200px; height: 600px"
-                        :src="ImageSrc"
-                        ></el-image>
-            </div>
 
+                <el-row  >
+                    <el-col :span="24"><div class="title-style">
+                        <h2 id="aboutTag">关于本课程</h2>
+                    </div></el-col>
+                </el-row>
+                <el-row type="flex" justify="center">
+                    <el-col :span="17"><div class="content-style">
+                        <el-row>
+                            <el-col :span="12">
+                                <div >
+                                    <el-image
+                                            style="width: 500px; height: 300px"
+                                            :src="ImageSrc"
+                                    ></el-image>
+                                </div>
+                            </el-col>
+                            <el-col :span="10" :offset="1">
+                                <div class="middle-style"></div>
+                                <h1>{{cname}}</h1>
+                                <h3>课程介绍</h3>
+
+                                <div class="intro-font-style intro-font" >{{courseInfo}}</div><el-divider></el-divider>
+                            </el-col>
+                        </el-row>
+                    </div></el-col>
+                </el-row>
             <!--作品集-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
@@ -16,7 +36,7 @@
             <!--目录-->
             <div class="category">
             <el-row type="flex" justify="center" v-loading="loading">
-                <el-col span="14">
+                <el-col :span="14">
                     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelectYear">
                         <el-menu-item index="0">全部年度</el-menu-item>
                         <el-menu-item v-for="item in term" :index="item.tid+''" :key="item.tid+''">{{item.tname}}</el-menu-item>
@@ -27,9 +47,9 @@
             </div>
             <!--卡片-->
             <el-row type="flex" justify="center">
-                <el-col span="20"><div class="content-style">
-                    <el-row gutter="24" >
-                        <el-col span="6" v-for="(o, index) in project" :key="index" style="margin-bottom: 25px">
+                <el-col :span="20"><div class="content-style">
+                    <el-row :gutter="24" >
+                        <el-col :span="6" v-for="(o, index) in project" :key="index" style="margin-bottom: 25px">
                             <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                 <router-link :to="'/gallery/detail/1/'+o.url"  target="_blank">
                                     <img :src="o.src" class="projectimage">
@@ -69,32 +89,8 @@
             </div>
             <!--关于本课程-->
 
-            <el-row  >
-                <el-col :span="24"><div class="title-style">
-                    <h2 id="aboutTag">关于本课程</h2>
-                </div></el-col>
-            </el-row>
-            <el-row type="flex" justify="center">
-                <el-col :span="17"><div class="content-style">
-                    <el-row>
-                        <el-col :span="12">
-                            <div >
-                                <el-image
-                                        style="width: 500px; height: 300px"
-                                        :src="ImageSrc"
-                                        ></el-image>
-                            </div>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
-                            <div class="middle-style"></div>
-                            <h1>{{cname}}</h1>
-                            <h3>课程介绍</h3>
 
-                            <div class="intro-font-style intro-font" >{{courseInfo}}</div><el-divider></el-divider>
-                        </el-col>
-                    </el-row>
-                </div></el-col>
-            </el-row></div>
+            </div>
 </template>
 
 <script>

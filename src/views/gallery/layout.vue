@@ -2,12 +2,18 @@
     <el-container>
     <el-header class="header-style">
         <div class="middle-style">
-            <el-page-header @back="goBack" :content="tags.name" v-if="tags.showNav"></el-page-header>
+            <el-image :src="logo" style="height: 40px;width: 150px"></el-image>
         </div>
         <div class="el-menu-style">
-            <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
-                <el-menu-item class="menu-item-style" v-for="tag in tags.items" :index="tag.index" :key="tag.index">{{tag.label}}</el-menu-item>
-            </el-menu></div>
+            <el-menu :default-active="activeIndex" :router="true" mode="horizontal" @select="handleSelect" background-color="#F6F6F6" active-text-color="black">
+                <el-menu-item class="menu-item-style" index="/" :key="1">主页</el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">课程</template>
+                    <el-menu-item  v-for="(item) in lesson " :index="'/gallery/lesson/'+item.id">{{item.name}}</el-menu-item>
+                </el-submenu>
+
+            </el-menu>
+        </div>
         <div>
             <router-link to="/login" >
                 <el-link :underline="false">转去登录</el-link>
@@ -17,35 +23,33 @@
     <!--内容-->
     <el-main class="main-style">
         <router-view @postChildInfo="getNavItem"></router-view>
-        <el-footer style="text-align: center;background-color: #F6F6F6; height: 100px;padding: 0px"><div style="font-size: 13px;padding: 10px;color: #909399">Copyright©2002-2021 School of Software,BUAA. All Right Reserved. 京ICP备05004617号-5</div></el-footer>
+        <el-footer style="text-align: center;background-color: #F6F6F6; height: 100px;padding: 0px"><div style="font-size: 13px;padding: 10px;color: #909399">Copyright©2002-2021 School of Software,BUAA. All Right Reserved.</div></el-footer>
     </el-main>
 
     </el-container>
 </template>
 
 <script>
+    import {courseName} from "@/api/course";
     export default {
         name: "layout",
         methods:{
-            getNavItem(Items){
-                this.tags=[]
-
-                this.tags=Items
+            async loadCourse() {
+                const res = await courseName();
+                if (res.code == 200) {
+                    this.lesson = res.data;
+                } else
+                    console.log(res)
             },
-            goBack(){
-                window.history.back();
-            },
-            handleSelect(tag){
-                if(tag==="0")
-                    this.$router.push('/')
-                else
-                document.querySelector("#"+tag).scrollIntoView(true);
-            },
+        },
+        created(){
+            this.loadCourse()
         },
         data(){
             return{
+                logo:require('@/assets/show_logo.png'),
                 activeIndex:"1",
-                tags:[
+                lesson:[
                 ],
             }
         }
@@ -61,8 +65,8 @@
         bottom: 0;
         overflow-y: scroll;
         padding-bottom: 0px;
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
     .header-style{
         box-shadow: 0 0 4px #c7c7c7;

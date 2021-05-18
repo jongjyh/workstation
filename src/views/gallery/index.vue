@@ -20,7 +20,7 @@
                     <h2 id="lessonTag">课程</h2>
                 </div></el-col>
             </el-row>
-            <el-row :gutter="24" type="flex" justify="center" v-loading="loading" >
+            <el-row :gutter="24" type="flex" justify="center" v-loading="loading"  id="infoDiv">
                 <el-col :span="20">
                 <div class="content-style">
                     <el-row :gutter="24">
@@ -76,39 +76,6 @@
                 </el-col>
             </el-row>
 
-            <!--回忆录-->
-            <el-row  >
-                <el-col :span="24"><div class="title-style">
-                    <h2 id="memoryTag">回忆录</h2>
-                </div></el-col>
-            </el-row>
-            <el-row type="flex" justify="center">
-                <el-col :span="17"><div class="content-style">
-                    <el-timeline>
-                        <el-timeline-item timestamp="2018/4/12" placement="top">
-                            <el-card>
-                                <h4>更新 Github 模板</h4>
-                                <p>王小虎 提交于 2018/4/12 20:46</p>
-                            </el-card>
-                        </el-timeline-item>
-                        <el-timeline-item timestamp="2018/4/3" placement="top">
-                            <el-card>
-                                <h4>更新 Github 模板</h4>
-                                <p>王小虎 提交于 2018/4/3 20:46</p>
-                            </el-card>
-                        </el-timeline-item>
-                        <el-timeline-item timestamp="2018/4/2" placement="top">
-                            <el-card>
-                                <h4>更新 Github 模板</h4>
-                                <p>王小虎 提交于 2018/4/2 20:46</p>
-                            </el-card>
-                        </el-timeline-item>
-                    </el-timeline>
-                    <div class="title-style">
-                        <h1>士谔学院，一路相伴，感谢有你！</h1>
-                    </div>
-                </div></el-col>
-            </el-row>
             <!--关于我们-->
             <el-row  >
                 <el-col :span="24"><div class="title-style">
@@ -133,27 +100,6 @@
         data(){
             return{
                 loading:true,
-                tags:{
-                    items:[
-                    {
-                        label:'课程集',
-                        index:'lessonTag'
-                    },
-                    {
-                        label:'优秀作品',
-                        index:'projectTag'
-                    },
-                    {
-                        label:'回忆录',
-                        index:'memoryTag'
-                    },
-                    {
-                        label:'关于我们',
-                        index:'aboutTag'
-                    },],
-                    showNav:false,
-                    name:'',
-                },
                 activeIndex:"0",
                 projects:[],
                 lesson:[],
@@ -176,7 +122,6 @@
                       }else
                       o.src=global.BACKEND_URL+'/img/'+o.thumb
                   })
-
               }else
                   console.log(res)
 
@@ -215,12 +160,16 @@
             this.loadProjects()
             /*读取课程信息*/
             /*读取老师推荐的作品*/
-            this.$emit('postChildInfo',this.tags)
+
         }
     }
 </script>
 
 <style scoped>
+    #infoDiv {
+        margin-left: 0px!important;
+        margin-right: 0px!important;
+    }
     .left{
         float: left;
     }
