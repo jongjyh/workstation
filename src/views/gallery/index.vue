@@ -145,15 +145,13 @@
                               o.src=global.BACKEND_URL+'/img/'+o.thumb
                       })
                   }
+                  if(this.projects)
                   this.carousel=this.projects.slice(0,5)
 
               }else
                   console.log(res)
               this.loading=false
           },
-            handleSelect(tag){
-                document.querySelector("#"+tag).scrollIntoView(true);
-            },
         },
         created() {
             this.loadCourse()

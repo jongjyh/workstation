@@ -24,7 +24,7 @@ module.exports = {
             // detail: https://cli.vuejs.org/config/#devserver-proxy
             '/api': { //需要代理的路径   例如 '/api'
 
-                target: `http://10.251.253.71`, //代理到 目标路径
+                target: `http://10.251.0.43:8080`, //代理到 目标路径
                 secure:false,
                 changeOrigin:true,
             }
