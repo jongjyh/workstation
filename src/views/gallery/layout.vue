@@ -5,11 +5,11 @@
             <el-image :src="logo" style="height: 40px;width: 150px"></el-image>
         </div>
         <div class="el-menu-style">
-            <el-menu :default-active="activeIndex" :router="true" mode="horizontal"  background-color="#F6F6F6" active-text-color="black">
+            <el-menu :default-active="$route.path" :router="true" mode="horizontal"  background-color="#F6F6F6" active-text-color="black">
                 <el-menu-item class="menu-item-style" index="/" :key="1">主页</el-menu-item>
-                <el-submenu index="2">
+                <el-submenu index="" >
                     <template slot="title">课程</template>
-                    <el-menu-item  v-for="(item) in lesson " :index="'/gallery/lesson/'+item.id">{{item.name}}</el-menu-item>
+                    <el-menu-item  v-for="(item,index) in lesson " :index="'/gallery/lesson/'+item.id" :key="index">{{item.name}}</el-menu-item>
                 </el-submenu>
 
             </el-menu>

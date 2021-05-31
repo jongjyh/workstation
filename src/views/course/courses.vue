@@ -32,7 +32,7 @@
                             <span >{{item.name}}</span>
                             <span style="float: right ;font-size: 14px; color: #999; display: block;">{{item.tname}}</span>
                             <div class="bottom clearfix">
-                                <span class="time">教师：{{item.teacher}}</span>
+                                <span class="time">教师：{{item.teacher_name}}</span>
                                 <router-link :to=" '/courses/courseInfo/'+item.cid" :key="item.cid">
                                     <el-button type="text" class="button">查看详情</el-button>
                                 </router-link>
@@ -173,6 +173,7 @@
                 if(res.code== 200){
                     this.lesson=res.data
                     this.showCourses=this.lesson
+                    console.log(this.showCourses)
                 }
                 else
                     console.log(res)

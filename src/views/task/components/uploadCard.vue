@@ -6,8 +6,9 @@
             center
             append-to-body
             :show-close='false'
-            :close-on-click-modal="false">
-        <div class="center-style">
+            :close-on-click-modal="false"
+           >
+        <div class="center-style"  v-loading="loading">
             <div class="center-style"><span >请上传你的{{acceptType}}文件，并把获得的外链填入上传链接</span></div>
             <el-upload
                     :accept="acceptType"
@@ -40,6 +41,7 @@
                 this.$emit('func',data)
             },
             async Upload(param){
+                this.loading=true;
                 let params = new FormData()
                 params.append("file", param.file)
                 const res=await upload(params);
@@ -48,7 +50,9 @@
                     this.$message.success("上传文件成功")
                     let data=res.data;
                     this.sendMsg(data)
+                    this.loading=false;
                     this.close()
+
                 }
                 else
                 {
@@ -56,10 +60,12 @@
                     {
                         this.$message.error("上传文件过大")
                     }
+                    this.loading=false;
                     console.log(res)
                 }
             },
             async UploadImg(param){
+                this.loading=true;
                 let params = new FormData()
                 params.append("file", param.file)
                 const res=await uploadImg(params,740,400);
@@ -68,6 +74,7 @@
                     this.$message.success("上传图片成功")
                     let data=res.data;
                     this.sendMsg(data)
+                    this.loading=false;
                     this.close()
                 }
                 else
@@ -75,6 +82,7 @@
                     if(res.data.code==413)
                     {
                         this.$message.error("上传文件过大")
+                        this.loading=false;
                     }
                     console.log(res)
                 }
@@ -82,6 +90,7 @@
         },
         data(){
             return{
+                loading:false,
                 fileList:[],
                 uploadFunction:function () {
 

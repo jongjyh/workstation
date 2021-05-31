@@ -439,10 +439,10 @@
               this.leader=status;
             },
             getfileURL(data){
-                this.projectForm.src_url=data
+                this.projectForm.dist_url=data
             },
             getcodeURL(data){
-              this.projectForm.dist_url=data
+              this.projectForm.src_url=data
             },
             getImgURL(data){
                 this.projectForm.thumb=data
