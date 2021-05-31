@@ -22,7 +22,7 @@
                 </el-col>
                 <el-col :span="4" offset="5"><div class="grid-content bg-purple">
                     <el-button type="primary" plain @click="saveReadMe()">保存</el-button>
-                    <el-button  plain @click="goOff()">取消</el-button></div></el-col>
+                    <el-button  plain @click="goOff()">返回</el-button></div></el-col>
             </el-row>
         </div>
 
