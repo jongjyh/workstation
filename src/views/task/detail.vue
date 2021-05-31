@@ -129,9 +129,9 @@
                     <el-col :span="12" class="time-table-time-style"><div>{{this.commitInfo.time}}</div></el-col>
                 </el-row>
                 <el-row type="flex" align="middle" justify="center">
-                    <el-tooltip  content="在团队作业中，仅队长可以提交作业" placement="bottom" effect="light">
+                    <el-tooltip  content="在团队作业中，仅队长可以提交作业；在个人作业中，你必须填写你的作品外链与源代码外链才能提交" placement="bottom" effect="light">
                         <div>
-                            <el-button plain @click="commitProject" :disabled="!this.leader||this.projectForm.src_url===''||this.projectForm.src_url==='null'||this.projectForm.dist_url===''" icon="el-icon-check">提交我的作业</el-button>
+                            <el-button plain @click="commitProject" :disabled="!this.leader||this.projectForm.src_url===''||this.projectForm.src_url==null||this.projectForm.dist_url==''||this.projectForm.dist_url==='null'" icon="el-icon-check">提交我的作业</el-button>
                         </div>
                     </el-tooltip>
                 </el-row>
@@ -577,6 +577,7 @@
                     {
                         this.commitInfo=res.data
                         this.loadProjectInfoFormFromLocal()
+                        console.log(this.projectForm)
                         if(this.projectForm.name==null&&this.commitInfo.status==true){
                             this.projectForm={...this.commitInfo};
                             this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb

@@ -169,6 +169,24 @@
             },
 
         },
+        watch: {
+            //监听相同路由下参数变化的时候，从而实现异步刷新
+            '$route'(to,from) {
+                //做一些路由变化的响应
+                //打开加载动画
+                this.loading = true;
+                //重新获取数据
+                this.cid=this.$route.params.id
+                this.loadCourse()
+                this.loadTerm()
+                this.loadProject(0,1,this.pageSize)
+                /** 初始化其他数据 */
+/*                let pid= this.$route.params.pid;
+                if(pid){
+                    this.initOther(pid);
+                }*/
+            },
+        },
 
     }
 </script>
