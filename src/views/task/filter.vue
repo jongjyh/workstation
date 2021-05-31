@@ -41,7 +41,7 @@
                 </div>
             </el-dialog>
             <el-row :gutter="20">
-                <el-col :span="1" ><el-button type="primary" plain v-if="this.role == 'teacher'" @click="addTaskFormVisible = true" icon="el-icon-plus">创建作业</el-button>
+                <el-col :span="1" ><el-button type="primary" plain v-if="this.role !== 'student'" @click="addTaskFormVisible = true" icon="el-icon-plus">创建作业</el-button>
                 </el-col>
                 <el-col :span="5" :offset="15">
                     <el-input

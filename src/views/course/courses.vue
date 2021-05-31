@@ -62,7 +62,7 @@
                 </el-form-item>
                 <el-form-item label="开设学期"  prop="term">
                     <el-select v-model="form.term" placeholder="请选择开设学期">
-                        <el-option v-for="(item,index) in term" :label="item.label" :value="item" :key='index'></el-option>
+                        <el-option v-for="(item,index) in term" :label="item.label" :value="item.tid" :key='index'></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="课程简介"  prop="intro">
@@ -121,7 +121,7 @@
                 let data={
                     name_id:this.form.name,
                     info:this.form.intro,
-                    tid:this.form.term.tid
+                    tid:this.form.term
                 }
 
                 this.$refs[formName].validate(async (valid) => {
@@ -160,7 +160,7 @@
                 const res= await terms()
                 if(res.code== 200){
                     this.term=res.data
-
+                    console.log(this.term)
                     this.term.forEach((term)=>{
                         term['label']=term.tname
                     })
