@@ -577,7 +577,10 @@
                     {
                         this.commitInfo=res.data
                         this.loadProjectInfoFormFromLocal()
-                        console.log(this.commitInfo)
+                        if(this.projectForm.name==null&&this.commitInfo.status==true){
+                            this.projectForm={...this.commitInfo};
+                            this.src=global.BACKEND_URL+'/img/'+this.projectForm.thumb
+                        }
                         //不在载入服务器的信息，以本地为准
 /*                        else{
                             this.projectForm={...this.commitInfo}
