@@ -2,7 +2,7 @@
             <div >
 
                 <el-row  >
-                    <el-col :span="24"><div class="title-style">
+                    <el-col :span="24"><div class="title-style none-line">
                         <h2 id="aboutTag">关于本课程</h2>
                     </div></el-col>
                 </el-row>
@@ -203,6 +203,9 @@
         border-bottom:1px solid #DCDFE6;
         height: 80px;
         margin-bottom: 70px;
+    }
+    .none-line{
+        border-bottom: 0px;
     }
     .content-style{
         margin-bottom: 80px;
