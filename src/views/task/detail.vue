@@ -129,7 +129,7 @@
                     <el-col :span="12" class="time-table-time-style"><div>{{this.commitInfo.time}}</div></el-col>
                 </el-row>
                 <el-row type="flex" align="middle" justify="center">
-                    <el-tooltip  content="在团队作用中，仅队长可以提交作业" placement="bottom" effect="light">
+                    <el-tooltip  content="在团队作业中，仅队长可以提交作业" placement="bottom" effect="light">
                         <div>
                             <el-button plain @click="commitProject" :disabled="!this.leader||this.projectForm.src_url===''||this.projectForm.src_url==='null'||this.projectForm.dist_url===''" icon="el-icon-check">提交我的作业</el-button>
                         </div>
