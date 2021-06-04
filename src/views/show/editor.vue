@@ -129,7 +129,7 @@
                 this.$router.go(-1)
             },
             getImgURL(data){
-                let src=global.BACKEND_URL+'/img/'+data.url
+                let src=global.BASE_URL+'/api/img/'+data.url
                 this.fileList.push({name:data.name,url:src})
             },
             saveReadMe(){
