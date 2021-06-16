@@ -21,7 +21,7 @@
             >
                 <i class="el-icon-upload"></i>
                 <div class="center-style">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="center-style" slot="tip">只能上传单个压缩包文件，且不超过10Mb</div>
+                <div class="center-style" slot="tip">只能上传单个压缩包文件，且不超过50Mb</div>
             </el-upload>
         </div>
         <span slot="footer" class="dialog-footer"><el-button type="primary" @click="close()">确 定</el-button></span></el-dialog>
